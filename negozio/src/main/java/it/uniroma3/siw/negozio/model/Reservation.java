@@ -27,7 +27,7 @@ public class Reservation {
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reservation")
     private List<ReservationItem> items;
 
     public Long getId() {

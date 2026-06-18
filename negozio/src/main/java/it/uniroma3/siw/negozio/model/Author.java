@@ -22,11 +22,8 @@ public class Author {
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
 
-    @OneToMany
+    @OneToMany(mappedBy = "author")
     private List<CD> cds;
-
-    @OneToMany
-    private List<Song> songs;
 
     public Long getId() {
         return id;
@@ -82,14 +79,6 @@ public class Author {
 
     public void setCds(List<CD> cds) {
         this.cds = cds;
-    }
-
-    public List<Song> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
     }
 
     @Override
