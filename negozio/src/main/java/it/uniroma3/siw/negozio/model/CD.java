@@ -24,12 +24,13 @@ public class CD {
     private int yearOfRelease;
     private String genre;
     private String recordLabel;
+    private List<String> songs;
 
     @ManyToOne
     private Author author;
 
-    @OneToMany
-    private List<Song> songs;
+    @OneToMany(mappedBy = "cd")
+    private List<ReservationItem> reservationItems;
 
     public Long getId() {
         return id;
@@ -95,11 +96,11 @@ public class CD {
         this.author = author;
     }
 
-    public List<Song> getSongs() {
+    public List<String> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
+    public void setSongs(List<String> songs) {
         this.songs = songs;
     }
 
@@ -112,7 +113,6 @@ public class CD {
         result = prime * result + ((genre == null) ? 0 : genre.hashCode());
         result = prime * result + ((recordLabel == null) ? 0 : recordLabel.hashCode());
         result = prime * result + ((author == null) ? 0 : author.hashCode());
-        result = prime * result + ((songs == null) ? 0 : songs.hashCode());
         return result;
     }
 
@@ -146,11 +146,6 @@ public class CD {
             if (other.author != null)
                 return false;
         } else if (!author.equals(other.author))
-            return false;
-        if (songs == null) {
-            if (other.songs != null)
-                return false;
-        } else if (!songs.equals(other.songs))
             return false;
         return true;
     }
