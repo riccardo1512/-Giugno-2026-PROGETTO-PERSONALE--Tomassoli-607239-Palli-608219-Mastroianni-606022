@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dettagli Autore</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1>Dettagli Autore</h1>
+
+    <div th:if="${author}">
+        <p><strong>Nome:</strong> <span th:text="${author.name}">Nome</span></p>
+        <p><strong>Cognome:</strong> <span th:text="${author.surname}">Cognome</span></p>
+        <p><strong>Nazionalità:</strong> <span th:text="${author.nationality}">Nazionalità</span></p>
+        <p><strong>Data di Nascita:</strong> <span th:text="${author.dateOfBirth}">Data di Nascita</span></p>
+        <p th:if="${author.dateOfDeath}"><strong>Data di Morte:</strong> <span th:text="${author.dateOfDeath}">Data di Morte</span></p>
+
+        <div th:if="${isAdmin}">
+            <hr>
+            <h3>Amministrazione</h3>
+            <a th:href="@{'/admin/authors/' + ${author.id} + '/edit'}">Modifica Autore</a>
+            <form th:action="@{'/admin/authors/' + ${author.id} + '/delete'}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo autore?')">Elimina Autore</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:unless="${author}">
+        L'autore richiesto non esiste.
+    </div>
+
+    <div>
+        <br>
+        <a href="/authors">Torna all'elenco degli autori</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dettagli CD</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1>Dettagli CD</h1>
+
+    <div th:if="${cd}">
+        <p><strong>Titolo:</strong> <span th:text="${cd.name}">Titolo</span></p>
+        <p><strong>Prezzo:</strong> €<span th:text="${cd.price}">Prezzo</span></p>
+        <p><strong>Quantità Disponibile:</strong> <span th:text="${cd.availableQuantity}">Quantità</span></p>
+        <p><strong>Anno di Uscita:</strong> <span th:text="${cd.yearOfRelease}">Anno</span></p>
+        <p><strong>Genere:</strong> <span th:text="${cd.genre}">Genere</span></p>
+        <p><strong>Etichetta Discografica:</strong> <span th:text="${cd.recordLabel}">Etichetta</span></p>
+        <p th:if="${cd.author}"><strong>Autore:</strong> 
+            <a th:href="@{'/authors/' + ${cd.author.id}}" th:text="${cd.author.name} + ' ' + ${cd.author.surname}">Autore</a>
+        </p>
+
+        <div th:if="${isAdmin}">
+            <hr>
+            <h3>Amministrazione</h3>
+            <a th:href="@{'/admin/cds/' + ${cd.id} + '/edit'}">Modifica CD</a>
+            <form th:action="@{'/admin/cds/' + ${cd.id} + '/delete'}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo CD?')">Elimina CD</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:unless="${cd}">
+        Il CD richiesto non esiste.
+    </div>
+
+    <div>
+        <br>
+        <a href="/cds">Torna all'elenco dei CD</a>
+    </div>
+</body>
+
+</html>

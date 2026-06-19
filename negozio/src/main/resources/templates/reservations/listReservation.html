@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Prenotazioni</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1>Prenotazioni</h1>
+    <div th:if="${reservations==null || reservations.isEmpty()}">Non ci sono prenotazioni nel sistema</div>
+    <ul>
+        <li th:each="reservation : ${reservations}">
+            <a th:href="@{'/reservations/' + ${reservation.id}}" th:text="'Prenotazione del ' + ${reservation.date} + ' - Stato: ' + ${reservation.state}">Dettaglio Prenotazione</a>
+        </li>
+    </ul>
+</body>
+
+</html>

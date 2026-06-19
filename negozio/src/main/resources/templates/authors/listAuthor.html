@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Autori</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1>Autori</h1>
+    <div th:if="${authors==null || authors.isEmpty()}">Non ci sono autori nel sistema</div>
+    <ul>
+        <li th:each="author : ${authors}">
+            <a th:href="@{'/authors/' + ${author.id}}" th:text="${author.name} + ' ' + ${author.surname}">Dettaglio Autore</a>
+        </li>
+    </ul>
+</body>
+
+</html>

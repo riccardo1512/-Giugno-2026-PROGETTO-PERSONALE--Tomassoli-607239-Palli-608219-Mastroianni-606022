@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dettagli Elemento Prenotato</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1>Dettagli Elemento Prenotato</h1>
+
+    <div th:if="${reservationItem}">
+        <p><strong>CD:</strong> <span th:text="${reservationItem.cd.name}">CD</span></p>
+        <p><strong>Quantità:</strong> <span th:text="${reservationItem.quantity}">Quantità</span></p>
+        <p><strong>Stato Prenotazione:</strong> <span th:text="${reservationItem.reservation.state}">Stato</span></p>
+
+        <div th:if="${isAdmin}">
+            <hr>
+            <h3>Amministrazione</h3>
+            <a th:href="@{'/admin/reservationItems/' + ${reservationItem.id} + '/edit'}">Modifica Elemento</a>
+            <form th:action="@{'/admin/reservationItems/' + ${reservationItem.id} + '/delete'}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo elemento?')">Elimina
+                    Elemento</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:unless="${reservationItem}">
+        L'elemento richiesto non esiste.
+    </div>
+
+    <div>
+        <br>
+        <a href="/reservationItems">Torna all'elenco degli elementi prenotati</a>
+    </div>
+</body>
+
+</html>
