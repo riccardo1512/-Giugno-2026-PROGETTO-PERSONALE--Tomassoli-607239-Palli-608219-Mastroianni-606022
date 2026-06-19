@@ -1,6 +1,5 @@
 package it.uniroma3.siw.negozio.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.negozio.model.Author;
@@ -9,7 +8,6 @@ import it.uniroma3.siw.negozio.repository.AuthorRepository;
 @Service
 public class AuthorService {
 
-    @Autowired
     private AuthorRepository authorRepository;
 
     public Iterable<Author> findAll() {
