@@ -1,8 +1,8 @@
 package it.uniroma3.siw.negozio.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import it.uniroma3.siw.negozio.model.CD;
 
-public interface CDRepository extends CrudRepository<CD, Long> {
+public interface CDRepository extends JpaRepository<CD, Long> {
 
 }

@@ -1,8 +1,8 @@
 package it.uniroma3.siw.negozio.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import it.uniroma3.siw.negozio.model.Reservation;
 
-public interface ReservationRepository extends CrudRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 }

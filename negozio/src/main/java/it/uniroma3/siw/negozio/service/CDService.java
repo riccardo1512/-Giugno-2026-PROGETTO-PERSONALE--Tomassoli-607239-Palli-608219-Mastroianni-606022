@@ -1,5 +1,8 @@
 package it.uniroma3.siw.negozio.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.negozio.model.CD;
@@ -10,19 +13,23 @@ public class CDService {
 
     private CDRepository cdRepository;
 
-    public Iterable<CD> findAll() {
-        return this.cdRepository.findAll();
+    public CDService(CDRepository cdRepository) {
+        this.cdRepository = cdRepository;
     }
 
-    public CD findById(Long id) {
-        return this.cdRepository.findById(id).orElse(null);
+    public List<CD> findAll() {
+        return cdRepository.findAll();
+    }
+
+    public Optional<CD> findById(Long id) {
+        return cdRepository.findById(id);
     }
 
     public CD save(CD cd) {
-        return this.cdRepository.save(cd);
+        return cdRepository.save(cd);
     }
 
     public void deleteById(Long id) {
-        this.cdRepository.deleteById(id);
+        cdRepository.deleteById(id);
     }
 }

@@ -1,5 +1,8 @@
 package it.uniroma3.siw.negozio.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.negozio.model.Author;
@@ -10,19 +13,23 @@ public class AuthorService {
 
     private AuthorRepository authorRepository;
 
-    public Iterable<Author> findAll() {
-        return this.authorRepository.findAll();
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
     }
 
-    public Author findById(Long id) {
-        return this.authorRepository.findById(id).orElse(null);
+    public List<Author> findAll() {
+        return authorRepository.findAll();
+    }
+
+    public Optional<Author> findById(Long id) {
+        return authorRepository.findById(id);
     }
 
     public Author save(Author author) {
-        return this.authorRepository.save(author);
+        return authorRepository.save(author);
     }
 
     public void deleteById(Long id) {
-        this.authorRepository.deleteById(id);
+        authorRepository.deleteById(id);
     }
 }

@@ -1,5 +1,8 @@
 package it.uniroma3.siw.negozio.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.negozio.model.Reservation;
@@ -10,19 +13,23 @@ public class ReservationService {
 
     private ReservationRepository reservationRepository;
 
-    public Iterable<Reservation> findAll() {
-        return this.reservationRepository.findAll();
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
-    public Reservation findById(Long id) {
-        return this.reservationRepository.findById(id).orElse(null);
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
+    }
+
+    public Optional<Reservation> findById(Long id) {
+        return reservationRepository.findById(id);
     }
 
     public Reservation save(Reservation reservation) {
-        return this.reservationRepository.save(reservation);
+        return reservationRepository.save(reservation);
     }
 
     public void deleteById(Long id) {
-        this.reservationRepository.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 }
