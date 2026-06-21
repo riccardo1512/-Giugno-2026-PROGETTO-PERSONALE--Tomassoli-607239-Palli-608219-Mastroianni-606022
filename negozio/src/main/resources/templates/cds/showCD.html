@@ -11,15 +11,26 @@
     <h1>Dettagli CD</h1>
 
     <div th:if="${cd}">
-        <p><strong>Titolo:</strong> <span th:text="${cd.name}">Titolo</span></p>
-        <p><strong>Prezzo:</strong> €<span th:text="${cd.price}">Prezzo</span></p>
-        <p><strong>Quantità Disponibile:</strong> <span th:text="${cd.availableQuantity}">Quantità</span></p>
-        <p><strong>Anno di Uscita:</strong> <span th:text="${cd.yearOfRelease}">Anno</span></p>
-        <p><strong>Genere:</strong> <span th:text="${cd.genre}">Genere</span></p>
-        <p><strong>Etichetta Discografica:</strong> <span th:text="${cd.recordLabel}">Etichetta</span></p>
-        <p th:if="${cd.author}"><strong>Autore:</strong> 
-            <a th:href="@{'/authors/' + ${cd.author.id}}" th:text="${cd.author.name} + ' ' + ${cd.author.surname}">Autore</a>
-        </p>
+        <span th:text="${cd.name}">Titolo</span>
+        <span th:text="'(' + ${cd.yearOfRelease} + ')'">Anno</span>
+        
+        <div>
+            <strong>Prezzo:</strong> €<span th:text="${cd.price}">Prezzo</span>
+        </div>
+        <div>
+            <strong>Quantità Disponibile:</strong> <span th:text="${cd.availableQuantity}">Quantità</span>
+        </div>
+        <div>
+            <strong>Genere:</strong> <span th:text="${cd.genre}">Genere</span>
+        </div>
+        <div>
+            <strong>Etichetta Discografica:</strong> <span th:text="${cd.recordLabel}">Etichetta</span>
+        </div>
+        <div>
+            <strong>Autore:</strong> 
+            <a th:if="${cd.author}" th:href="@{'/authors' + '/' + ${cd.author.id}}" th:text="${cd.author.name} + ' ' + ${cd.author.surname}">Autore</a>
+            <span th:unless="${cd.author}">Non specificato</span>
+        </div>
 
         <div th:if="${isAdmin}">
             <hr>

@@ -12,7 +12,8 @@
     <div th:if="${cds==null || cds.isEmpty()}">Non ci sono CD nel sistema</div>
     <ul>
         <li th:each="cd : ${cds}">
-            <a th:href="@{'/cds/' + ${cd.id}}" th:text="${cd.name} + ' - €' + ${cd.price}">Dettaglio CD</a>
+            <a th:href="@{'/cds' + '/' + ${cd.id}}" th:text="${cd.name}">titolo</a>
+            <span th:text="' - €' + ${cd.price}">prezzo</span>
         </li>
     </ul>
 </body>
