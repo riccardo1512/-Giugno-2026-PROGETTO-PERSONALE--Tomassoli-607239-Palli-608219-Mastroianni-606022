@@ -9,6 +9,11 @@
 <body>
     <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
     <h1>Autori</h1>
+    
+    <div th:if="${isAdmin}" style="margin-bottom: 20px;">
+        <a href="/admin/authors/new"><button>Crea Nuovo Autore</button></a>
+    </div>
+
     <div th:if="${authors==null || authors.isEmpty()}">Non ci sono autori nel sistema</div>
     <ul>
         <li th:each="author : ${authors}">

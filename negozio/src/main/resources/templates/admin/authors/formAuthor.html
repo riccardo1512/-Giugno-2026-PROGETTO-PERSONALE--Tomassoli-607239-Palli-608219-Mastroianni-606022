@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestione Autore</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1 th:text="${author.id != null ? 'Modifica Autore' : 'Nuovo Autore'}">Gestione Autore</h1>
+
+    <div th:if="${error}" class="error">
+        <p th:text="${error}">Errore</p>
+    </div>
+
+    <form th:action="@{/admin/authors}" method="POST" th:object="${author}">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label>Nome:</label>
+            <input type="text" th:field="*{name}" required />
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Errore Nome</span>
+        </div>
+
+        <div>
+            <label>Cognome:</label>
+            <input type="text" th:field="*{surname}" required />
+            <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Errore Cognome</span>
+        </div>
+
+        <div>
+            <label>Nazionalità:</label>
+            <input type="text" th:field="*{nationality}" required />
+            <span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}">Errore Nazionalità</span>
+        </div>
+
+        <div>
+            <label>Data di Nascita:</label>
+            <input type="date" th:field="*{dateOfBirth}" required />
+            <span th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Errore Data Nascita</span>
+        </div>
+
+        <div>
+            <label>Data di Morte (Opzionale):</label>
+            <input type="date" th:field="*{dateOfDeath}" />
+            <span th:if="${#fields.hasErrors('dateOfDeath')}" th:errors="*{dateOfDeath}">Errore Data Morte</span>
+        </div>
+
+        <div>
+            <button type="submit">Salva Autore</button>
+        </div>
+    </form>
+
+    <div>
+        <br>
+        <a href="/authors">Annulla e Torna all'elenco degli autori</a>
+    </div>
+</body>
+
+</html>

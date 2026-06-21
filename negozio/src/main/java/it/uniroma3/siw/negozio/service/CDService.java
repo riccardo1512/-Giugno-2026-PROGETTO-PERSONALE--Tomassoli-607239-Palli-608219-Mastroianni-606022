@@ -11,10 +11,12 @@ import it.uniroma3.siw.negozio.repository.CDRepository;
 @Service
 public class CDService {
 
-    private CDRepository cdRepository;
+    private final CDRepository cdRepository;
+    private final it.uniroma3.siw.negozio.repository.ReservationItemRepository reservationItemRepository;
 
-    public CDService(CDRepository cdRepository) {
+    public CDService(CDRepository cdRepository, it.uniroma3.siw.negozio.repository.ReservationItemRepository reservationItemRepository) {
         this.cdRepository = cdRepository;
+        this.reservationItemRepository = reservationItemRepository;
     }
 
     public List<CD> findAll() {
@@ -30,6 +32,12 @@ public class CDService {
     }
 
     public void deleteById(Long id) {
-        cdRepository.deleteById(id);
+        Optional<CD> cdOpt = cdRepository.findById(id);
+        if (cdOpt.isPresent()) {
+            CD cd = cdOpt.get();
+            List<it.uniroma3.siw.negozio.model.ReservationItem> items = reservationItemRepository.findByCd(cd);
+            reservationItemRepository.deleteAll(items);
+            cdRepository.delete(cd);
+        }
     }
 }

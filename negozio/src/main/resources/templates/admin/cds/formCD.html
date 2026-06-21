@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gestione CD</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <h1 th:text="${cd.id != null ? 'Modifica CD' : 'Nuovo CD'}">Gestione CD</h1>
+
+    <div th:if="${#fields.hasGlobalErrors()}" class="error">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore Generico</p>
+    </div>
+
+    <form th:action="@{/admin/cds}" method="POST" th:object="${cd}">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label>Titolo CD:</label>
+            <input type="text" th:field="*{name}" required />
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Errore</span>
+        </div>
+
+        <div>
+            <label>Prezzo:</label>
+            <input type="number" step="0.01" th:field="*{price}" required />
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Errore</span>
+        </div>
+
+        <div>
+            <label>Quantità Disponibile:</label>
+            <input type="number" th:field="*{availableQuantity}" required />
+            <span th:if="${#fields.hasErrors('availableQuantity')}" th:errors="*{availableQuantity}">Errore</span>
+        </div>
+
+        <div>
+            <label>Anno di rilascio:</label>
+            <input type="number" th:field="*{yearOfRelease}" required />
+            <span th:if="${#fields.hasErrors('yearOfRelease')}" th:errors="*{yearOfRelease}">Errore</span>
+        </div>
+
+        <div>
+            <label>Genere:</label>
+            <input type="text" th:field="*{genre}" required />
+            <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}">Errore</span>
+        </div>
+
+        <div>
+            <label>Etichetta Discografica:</label>
+            <input type="text" th:field="*{recordLabel}" />
+            <span th:if="${#fields.hasErrors('recordLabel')}" th:errors="*{recordLabel}">Errore</span>
+        </div>
+
+        <div>
+            <label>Autore:</label>
+            <select th:field="*{author}" required>
+                <option value="" th:text="'--- Seleziona Autore ---'"></option>
+                <option th:each="a : ${authors}" 
+                        th:value="${a.id}" 
+                        th:text="${a.name + ' ' + a.surname}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Errore</span>
+        </div>
+
+        <div>
+            <button type="submit">Salva CD</button>
+        </div>
+    </form>
+
+    <div>
+        <br>
+        <a href="/cds">Annulla e Torna all'elenco dei CD</a>
+    </div>
+</body>
+
+</html>

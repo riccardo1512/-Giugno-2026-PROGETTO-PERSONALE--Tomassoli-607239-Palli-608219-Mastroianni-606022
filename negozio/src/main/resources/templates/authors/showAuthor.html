@@ -10,6 +10,10 @@
     <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
     <h1>Dettagli Autore</h1>
 
+    <div th:if="${error}" class="error" style="color:red; margin-bottom: 15px;">
+        <p th:text="${error}">Messaggio di errore</p>
+    </div>
+
     <div th:if="${author}">
         <span th:text="${author.name}">Nome</span>
         <span th:text="${author.surname}">Cognome</span>
@@ -39,8 +43,13 @@
             <hr>
             <h3>Amministrazione</h3>
             <a th:href="@{'/admin/authors/' + ${author.id} + '/edit'}">Modifica Autore</a>
+            <br><br>
             <form th:action="@{'/admin/authors/' + ${author.id} + '/delete'}" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo autore?')">Elimina Autore</button>
+                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare l\'autore? Se ha ancora CD associati, l\'operazione fallirà.')">Elimina Solo Autore</button>
+            </form>
+            
+            <form th:action="@{'/admin/authors/' + ${author.id} + '/deleteWithCDs'}" method="POST" style="display:inline; margin-left: 10px;">
+                <button type="submit" style="color: red;" onclick="return confirm('ATTENZIONE: Sei sicuro di voler eliminare questo autore E TUTTI I SUOI CD dal negozio in modo irreversibile?')">Elimina Autore + Suoi CD</button>
             </form>
         </div>
     </div>

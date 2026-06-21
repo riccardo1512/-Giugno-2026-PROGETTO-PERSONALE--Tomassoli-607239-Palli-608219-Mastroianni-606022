@@ -36,8 +36,9 @@
             <hr>
             <h3>Amministrazione</h3>
             <a th:href="@{'/admin/cds/' + ${cd.id} + '/edit'}">Modifica CD</a>
+            <br><br>
             <form th:action="@{'/admin/cds/' + ${cd.id} + '/delete'}" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo CD?')">Elimina CD</button>
+                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo CD? Le eventuali copie di questo CD presenti nelle prenotazioni degli utenti verranno eliminate anch\'esse.')">Elimina CD</button>
             </form>
         </div>
     </div>
