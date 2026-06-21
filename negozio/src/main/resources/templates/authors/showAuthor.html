@@ -11,11 +11,29 @@
     <h1>Dettagli Autore</h1>
 
     <div th:if="${author}">
-        <p><strong>Nome:</strong> <span th:text="${author.name}">Nome</span></p>
-        <p><strong>Cognome:</strong> <span th:text="${author.surname}">Cognome</span></p>
-        <p><strong>Nazionalità:</strong> <span th:text="${author.nationality}">Nazionalità</span></p>
-        <p><strong>Data di Nascita:</strong> <span th:text="${author.dateOfBirth}">Data di Nascita</span></p>
-        <p th:if="${author.dateOfDeath}"><strong>Data di Morte:</strong> <span th:text="${author.dateOfDeath}">Data di Morte</span></p>
+        <span th:text="${author.name}">Nome</span>
+        <span th:text="${author.surname}">Cognome</span>
+        
+        <div>
+            <strong>Nazionalità:</strong> <span th:text="${author.nationality}">Nazionalità</span>
+        </div>
+        <div>
+            <strong>Data di Nascita:</strong> <span th:text="${author.dateOfBirth}">Data di Nascita</span>
+        </div>
+        <div th:if="${author.dateOfDeath}">
+            <strong>Data di Morte:</strong> <span th:text="${author.dateOfDeath}">Data di Morte</span>
+        </div>
+
+        <div>
+            <strong>CD Musicali:</strong>
+            <ul th:if="${not #lists.isEmpty(author.cds)}">
+                <li th:each="cd : ${author.cds}">
+                    <a th:href="@{'/cds/' + ${cd.id}}" th:text="${cd.name}">Titolo CD</a>
+                    <span th:text="'(' + ${cd.yearOfRelease} + ')'">Anno</span>
+                </li>
+            </ul>
+            <span th:if="${#lists.isEmpty(author.cds)}">Nessun CD presente</span>
+        </div>
 
         <div th:if="${isAdmin}">
             <hr>

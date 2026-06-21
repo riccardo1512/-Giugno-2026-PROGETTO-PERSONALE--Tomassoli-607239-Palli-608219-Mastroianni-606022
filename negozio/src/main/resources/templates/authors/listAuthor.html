@@ -12,7 +12,7 @@
     <div th:if="${authors==null || authors.isEmpty()}">Non ci sono autori nel sistema</div>
     <ul>
         <li th:each="author : ${authors}">
-            <a th:href="@{'/authors/' + ${author.id}}" th:text="${author.name} + ' ' + ${author.surname}">Dettaglio Autore</a>
+            <a th:href="@{'/authors' + '/' + ${author.id}}" th:text="${author.name} + ' ' + ${author.surname}">Nome Autore</a>
         </li>
     </ul>
 </body>
