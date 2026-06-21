@@ -41,7 +41,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
+    protected SecurityFilterChain configure(final HttpSecurity httpSecurity, CustomOAuth2UserService customOAuth2UserService) throws Exception {
 
         httpSecurity.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/cds", "/cds/**",
@@ -58,6 +58,14 @@ public class SecurityConfiguration {
             form.loginPage("/login").permitAll();
             form.defaultSuccessUrl("/success", true);
             form.failureUrl("/login?error=true");
+        });
+
+        httpSecurity.oauth2Login(oauth2 -> {
+            oauth2.loginPage("/login").permitAll();
+            oauth2.userInfoEndpoint(userInfo -> 
+                userInfo.userService(customOAuth2UserService)
+            );
+            oauth2.defaultSuccessUrl("/", true);
         });
 
         httpSecurity.logout(logout -> {

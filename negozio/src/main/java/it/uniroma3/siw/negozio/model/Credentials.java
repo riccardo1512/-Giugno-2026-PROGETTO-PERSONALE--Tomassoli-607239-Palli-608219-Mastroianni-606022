@@ -20,10 +20,9 @@ public class Credentials {
 
     @Column(nullable = false, unique = true)
     private String username;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private String password;
 
-    @Column(nullable = false)
     private String role;
 
     @OneToOne(cascade = CascadeType.ALL)

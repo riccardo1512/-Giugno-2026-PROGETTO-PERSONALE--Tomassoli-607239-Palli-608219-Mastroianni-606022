@@ -7,18 +7,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
 @ControllerAdvice
 public class GlobalController {
     @ModelAttribute("userDetails")
-
-    public UserDetails getUser() {
-        UserDetails user = null;
-
+    public Object getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                return principal;
+            } else if (principal instanceof OAuth2User) {
+                OAuth2User oauth2User = (OAuth2User) principal;
+                return new Object() {
+                    public String getUsername() {
+                        String name = oauth2User.getAttribute("name");
+                        if (name == null) name = oauth2User.getAttribute("login");
+                        return name != null ? name : "Utente OAuth2";
+                    }
+                };
+            }
         }
-        return user;
+        return null;
     }
 
     @ModelAttribute("isAdmin")

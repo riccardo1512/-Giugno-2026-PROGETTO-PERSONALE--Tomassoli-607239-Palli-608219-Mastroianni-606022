@@ -15,7 +15,7 @@ public class CredentialsService {
     private PasswordEncoder passwordEncoder;
     private CredentialsRepository credentialsRepository;
 
-    public CredentialsService(CredentialsRepository credentialsRepository) {
+    public CredentialsService(PasswordEncoder passwordEncoder, CredentialsRepository credentialsRepository) {
         this.passwordEncoder = passwordEncoder;
         this.credentialsRepository = credentialsRepository;
     }

@@ -16,9 +16,12 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 
 	private final CredentialsService credentialsService;
+    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+    private final org.springframework.security.web.context.SecurityContextRepository securityContextRepository = new org.springframework.security.web.context.HttpSessionSecurityContextRepository();
 
-	public AuthenticationController(CredentialsService credentialsService) {
+	public AuthenticationController(CredentialsService credentialsService, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
 		this.credentialsService = credentialsService;
+        this.userDetailsService = userDetailsService;
 	}
 
 	@GetMapping(value = "/register")
@@ -46,12 +49,25 @@ public class AuthenticationController {
 	@PostMapping(value = { "/register" })
 	public String registerUser(@Valid @ModelAttribute("user") User user,
 			BindingResult userBindingResult, @Valid @ModelAttribute("credentials") Credentials credentials,
-			BindingResult credentialsBindingResult) {
+			BindingResult credentialsBindingResult,
+            jakarta.servlet.http.HttpServletRequest request,
+            jakarta.servlet.http.HttpServletResponse response) {
 
 		if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
 			user.setUsername(credentials.getUsername());
 			credentials.setUser(user);
 			credentialsService.saveCredentials(credentials);
+
+            // Effettua il login automatico e lo salva nella sessione
+            org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
+            org.springframework.security.core.Authentication authentication = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            
+            org.springframework.security.core.context.SecurityContext context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authentication);
+            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+            
+            securityContextRepository.saveContext(context, request, response);
+
 			return "redirect:/";
 		}
 		return "authentication/registerUser";
