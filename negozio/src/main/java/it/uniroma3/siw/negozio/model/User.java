@@ -27,6 +27,9 @@ public class User {
     @OneToMany
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "author")
+    private List<Review> reviews;
+
     public Long getId() {
         return id;
     }

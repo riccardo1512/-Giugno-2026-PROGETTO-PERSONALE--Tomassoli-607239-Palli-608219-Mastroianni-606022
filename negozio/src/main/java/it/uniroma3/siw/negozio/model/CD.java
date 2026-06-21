@@ -32,6 +32,9 @@ public class CD {
     @OneToMany(mappedBy = "cd")
     private List<ReservationItem> reservationItems;
 
+    @OneToMany(mappedBy = "cd")
+    private List<Review> reviews;
+
     public Long getId() {
         return id;
     }
@@ -102,6 +105,14 @@ public class CD {
 
     public void setSongs(List<String> songs) {
         this.songs = songs;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     @Override
