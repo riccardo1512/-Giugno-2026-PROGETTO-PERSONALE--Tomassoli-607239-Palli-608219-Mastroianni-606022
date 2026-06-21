@@ -9,18 +9,24 @@ INSERT INTO cd (id, name, price, available_quantity, year_of_release, genre, rec
 INSERT INTO cd (id, name, price, available_quantity, year_of_release, genre, record_label, author_id) VALUES (3, 'The Rise and Fall of Ziggy Stardust', 22.00, 8, 1972, 'Glam Rock', 'RCA', 3);
 INSERT INTO cd (id, name, price, available_quantity, year_of_release, genre, record_label, author_id) VALUES (4, 'Innuendo', 18.00, 15, 1991, 'Rock', 'Parlophone', 1);
 -- Users
-INSERT INTO users (id, name, surname, username) VALUES (1, 'Elena', 'Rossi', 'elena');
-INSERT INTO users (id, name, surname, username) VALUES (2, 'Admin', 'Sistema', 'admin');
+INSERT INTO users (id, name, surname, username) VALUES (nextval('users_seq'), 'Elena', 'Rossi', 'elena');
+INSERT INTO users (id, name, surname, username) VALUES (nextval('users_seq'), 'Admin', 'Sistema', 'admin');
+INSERT INTO users (id, name, surname, username) VALUES (nextval('users_seq'), 'Mario', 'Rossi', 'mario');
+INSERT INTO users (id, name, surname, username) VALUES (nextval('users_seq'), 'Luigi', 'Bianchi', 'luigi');
+INSERT INTO users (id, name, surname, username) VALUES (nextval('users_seq'), 'Paolo', 'Verdi', 'paolo');
 
--- Credentials
-INSERT INTO credentials (id, username, password, role, user_id) VALUES (1, 'elena', '$2b$12$8bKH.3HZ8L/R2sY/iC.j4uq9zYfQ/ldJV8YrdoFKMnnRefj.kGPAe', 'DEFAULT', 1);
-INSERT INTO credentials (id, username, password, role, user_id) VALUES (2, 'admin', '$2b$12$sQTO9RVXui6RhYPGaaRlm.uABGtMaZd.7RFfhihvG0quX9MfT7klq', 'ADMIN', 2);
+-- Credentials (password per tutti: "paolo")
+INSERT INTO credentials (id, username, password, role, user_id) VALUES (nextval('credentials_seq'), 'elena', '$2a$10$yWAIDyuEr78BBBFZ5cYh8.Nw4gUHFTRG5FwaWqNCGeOD8M4mh3.xy', 'DEFAULT', (select id from users where username = 'elena'));
+INSERT INTO credentials (id, username, password, role, user_id) VALUES (nextval('credentials_seq'), 'admin', '$2a$10$yWAIDyuEr78BBBFZ5cYh8.Nw4gUHFTRG5FwaWqNCGeOD8M4mh3.xy', 'ADMIN', (select id from users where username = 'admin'));
+INSERT INTO credentials (id, username, password, role, user_id) VALUES (nextval('credentials_seq'), 'mario', '$2a$10$yWAIDyuEr78BBBFZ5cYh8.Nw4gUHFTRG5FwaWqNCGeOD8M4mh3.xy', 'DEFAULT', (select id from users where username = 'mario'));
+INSERT INTO credentials (id, username, password, role, user_id) VALUES (nextval('credentials_seq'), 'luigi', '$2a$10$yWAIDyuEr78BBBFZ5cYh8.Nw4gUHFTRG5FwaWqNCGeOD8M4mh3.xy', 'DEFAULT', (select id from users where username = 'luigi'));
+INSERT INTO credentials (id, username, password, role, user_id) VALUES (nextval('credentials_seq'), 'paolo', '$2a$10$yWAIDyuEr78BBBFZ5cYh8.Nw4gUHFTRG5FwaWqNCGeOD8M4mh3.xy', 'ADMIN', (select id from users where username = 'paolo'));
 
 -- Reservations 
-INSERT INTO reservation (id, date, state, user_id) VALUES (1, '2026-06-15', 'CONFIRMED', 1);
-INSERT INTO reservation (id, date, state, user_id) VALUES (2, '2026-06-18', 'PENDING', 2);
+INSERT INTO reservation (id, date, state, user_id) VALUES (nextval('reservation_seq'), '2026-06-15', 'CONFIRMED', (select id from users where username = 'elena'));
+INSERT INTO reservation (id, date, state, user_id) VALUES (nextval('reservation_seq'), '2026-06-18', 'PENDING', (select id from users where username = 'admin'));
 
 -- Reservation Items
-INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (1, 2, 1, 1);
-INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (2, 1, 2, 1);
-INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (3, 3, 3, 2);
+INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 2, 1, (select id from reservation where date = '2026-06-15'));
+INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 1, 2, (select id from reservation where date = '2026-06-15'));
+INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 3, 3, (select id from reservation where date = '2026-06-18'));
