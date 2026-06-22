@@ -12,14 +12,25 @@ import it.uniroma3.siw.negozio.model.User;
 import it.uniroma3.siw.negozio.service.CredentialsService;
 import jakarta.validation.Valid;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 public class AuthenticationController {
 
 	private final CredentialsService credentialsService;
-    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
-    private final org.springframework.security.web.context.SecurityContextRepository securityContextRepository = new org.springframework.security.web.context.HttpSessionSecurityContextRepository();
+    private final UserDetailsService userDetailsService;
+    private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
-	public AuthenticationController(CredentialsService credentialsService, org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
+	public AuthenticationController(CredentialsService credentialsService, UserDetailsService userDetailsService) {
 		this.credentialsService = credentialsService;
         this.userDetailsService = userDetailsService;
 	}
@@ -50,8 +61,8 @@ public class AuthenticationController {
 	public String registerUser(@Valid @ModelAttribute("user") User user,
 			BindingResult userBindingResult, @Valid @ModelAttribute("credentials") Credentials credentials,
 			BindingResult credentialsBindingResult,
-            jakarta.servlet.http.HttpServletRequest request,
-            jakarta.servlet.http.HttpServletResponse response) {
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
 		if (!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
 			user.setUsername(credentials.getUsername());
@@ -59,12 +70,12 @@ public class AuthenticationController {
 			credentialsService.saveCredentials(credentials);
 
             // Effettua il login automatico e lo salva nella sessione
-            org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
-            org.springframework.security.core.Authentication authentication = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             
-            org.springframework.security.core.context.SecurityContext context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authentication);
-            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+            SecurityContextHolder.setContext(context);
             
             securityContextRepository.saveContext(context, request, response);
 

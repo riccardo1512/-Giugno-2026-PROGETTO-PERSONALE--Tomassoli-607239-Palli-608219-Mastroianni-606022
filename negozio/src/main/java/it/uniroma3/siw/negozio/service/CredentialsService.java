@@ -20,13 +20,13 @@ public class CredentialsService {
         this.credentialsRepository = credentialsRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Credentials getCredentials(Long id) {
         Optional<Credentials> result = this.credentialsRepository.findById(id);
         return result.orElse(null);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Credentials getCredentials(String username) {
         Optional<Credentials> result = Optional.ofNullable(this.credentialsRepository.findByUsername(username));
         return result.orElse(null);

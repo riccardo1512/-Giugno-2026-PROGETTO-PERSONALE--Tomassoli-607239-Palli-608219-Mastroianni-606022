@@ -6,8 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import it.uniroma3.siw.negozio.model.CD;
+import it.uniroma3.siw.negozio.model.Genre;
 import it.uniroma3.siw.negozio.service.CDService;
 
 @Controller
@@ -47,9 +52,9 @@ public class CDController {
         return "admin/cds/formCD";
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/admin/cds")
-    public String save(@jakarta.validation.Valid @org.springframework.web.bind.annotation.ModelAttribute("cd") CD cd,
-            org.springframework.validation.BindingResult bindingResult, Model model) {
+    @PostMapping("/admin/cds")
+    public String save(@Valid @ModelAttribute("cd") CD cd,
+            BindingResult bindingResult, Model model) {
         cdValidator.validate(cd, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("authors", authorService.findAll());
@@ -68,12 +73,12 @@ public class CDController {
         }
         model.addAttribute("cd", optional.get());
         model.addAttribute("authors", authorService.findAll());
-        model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
+        model.addAttribute("genres", Genre.values());
         return "admin/cds/formCD";
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/admin/cds/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    @PostMapping("/admin/cds/{id}/delete")
+    public String deleteCD(@PathVariable("id") Long id) {
         cdService.deleteById(id);
         return "redirect:/cds";
     }

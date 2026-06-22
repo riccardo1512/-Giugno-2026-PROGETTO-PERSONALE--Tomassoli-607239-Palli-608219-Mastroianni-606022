@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.negozio.model.User;
 import it.uniroma3.siw.negozio.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -17,7 +17,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User getUser(Long id) {
         Optional<User> result = this.userRepository.findById(id);
         return result.orElse(null);

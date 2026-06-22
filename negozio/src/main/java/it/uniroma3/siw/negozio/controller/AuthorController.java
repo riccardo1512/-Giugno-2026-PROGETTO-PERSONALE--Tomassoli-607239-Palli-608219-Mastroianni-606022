@@ -6,6 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.negozio.model.Author;
 import it.uniroma3.siw.negozio.service.AuthorService;
@@ -43,9 +49,9 @@ public class AuthorController {
         return "admin/authors/formAuthor";
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/admin/authors")
-    public String save(@jakarta.validation.Valid @org.springframework.web.bind.annotation.ModelAttribute("author") Author author,
-            org.springframework.validation.BindingResult bindingResult, Model model) {
+    @PostMapping("/admin/authors")
+    public String save(@Valid @ModelAttribute("author") Author author,
+            BindingResult bindingResult, Model model) {
         authorValidator.validate(author, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin/authors/formAuthor";
@@ -64,8 +70,8 @@ public class AuthorController {
         return "admin/authors/formAuthor";
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/admin/authors/{id}/delete")
-    public String delete(@PathVariable Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+    @PostMapping("/admin/authors/{id}/delete")
+    public String deleteAuthor(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             authorService.deleteById(id);
         } catch (IllegalStateException e) {
@@ -75,8 +81,8 @@ public class AuthorController {
         return "redirect:/authors";
     }
 
-    @org.springframework.web.bind.annotation.PostMapping("/admin/authors/{id}/deleteWithCDs")
-    public String deleteWithCDs(@PathVariable Long id) {
+    @PostMapping("/admin/authors/{id}/deleteWithCDs")
+    public String deleteAuthorWithCDs(@PathVariable("id") Long id) {
         authorService.deleteWithCDs(id);
         return "redirect:/authors";
     }

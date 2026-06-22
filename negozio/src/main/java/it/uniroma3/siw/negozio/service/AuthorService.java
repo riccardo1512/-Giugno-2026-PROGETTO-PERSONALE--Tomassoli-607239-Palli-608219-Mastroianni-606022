@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.uniroma3.siw.negozio.model.Author;
 import it.uniroma3.siw.negozio.repository.AuthorRepository;
@@ -19,18 +20,22 @@ public class AuthorService {
         this.cdService = cdService;
     }
 
+    @Transactional(readOnly = true)
     public List<Author> findAll() {
         return authorRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
     }
 
+    @Transactional
     public Author save(Author author) {
         return authorRepository.save(author);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Optional<Author> authorOpt = authorRepository.findById(id);
         if (authorOpt.isPresent()) {
@@ -42,6 +47,7 @@ public class AuthorService {
         }
     }
 
+    @Transactional
     public void deleteWithCDs(Long id) {
         Optional<Author> authorOpt = authorRepository.findById(id);
         if (authorOpt.isPresent()) {
