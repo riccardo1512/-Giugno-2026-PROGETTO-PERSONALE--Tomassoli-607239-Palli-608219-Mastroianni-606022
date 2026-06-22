@@ -138,6 +138,17 @@ public class CD {
         this.reviews = reviews;
     }
 
+    public double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0;
+        for (Review r : reviews) {
+            sum += r.getRating();
+        }
+        return sum / reviews.size();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

@@ -26,19 +26,26 @@
             </div>
         </div>
     </header>
-    <h1>Elenco CD</h1>
+    <h1 class="section-title" style="text-align: center;">Esplora i Nostri CD</h1>
     
-    <div th:if="${isAdmin}" style="margin-bottom: 20px;">
-        <a href="/admin/cds/new"><button>Crea Nuovo CD</button></a>
+    <div th:if="${isAdmin}" style="text-align: center; margin-bottom: 30px;">
+        <a href="/admin/cds/new" class="btn-action">➕ Crea Nuovo CD</a>
     </div>
 
-    <div th:if="${cds==null || cds.isEmpty()}">Non ci sono CD nel sistema</div>
-    <ul>
-        <li th:each="cd : ${cds}">
-            <a th:href="@{'/cds' + '/' + ${cd.id}}" th:text="${cd.name}">titolo</a>
-            <span th:text="' - €' + ${cd.price}">prezzo</span>
-        </li>
-    </ul>
+    <div th:if="${cds==null || cds.isEmpty()}" style="text-align: center; color: dimgray; margin-top: 50px;">
+        <p>Non ci sono CD nel sistema al momento.</p>
+    </div>
+    
+    <div class="home-grid" th:unless="${cds==null || cds.isEmpty()}">
+        <a th:each="cd : ${cds}" th:href="@{'/cds/' + ${cd.id}}" class="home-card" style="text-decoration: none;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">💿</div>
+            <div class="home-card-title" th:text="${cd.name}" style="color: var(--primary-color);">Titolo CD</div>
+            <div style="font-size: 1.2rem; font-weight: bold; color: darkslategray;" th:text="'€' + ${#numbers.formatDecimal(cd.price, 1, 2)}">Prezzo</div>
+            <div style="font-size: 0.9rem; color: dimgray; margin-top: auto;">
+                Scopri di più &rarr;
+            </div>
+        </a>
+    </div>
 </body>
 
 </html>

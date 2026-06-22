@@ -25,18 +25,25 @@
             </div>
         </div>
     </header>
-    <h1>Autori</h1>
+    <h1 class="section-title" style="text-align: center;">I Nostri Autori</h1>
     
-    <div th:if="${isAdmin}" style="margin-bottom: 20px;">
-        <a href="/admin/authors/new"><button>Crea Nuovo Autore</button></a>
+    <div th:if="${isAdmin}" style="text-align: center; margin-bottom: 30px;">
+        <a href="/admin/authors/new" class="btn-action">➕ Crea Nuovo Autore</a>
     </div>
 
-    <div th:if="${authors==null || authors.isEmpty()}">Non ci sono autori nel sistema</div>
-    <ul>
-        <li th:each="author : ${authors}">
-            <a th:href="@{'/authors' + '/' + ${author.id}}" th:text="${author.name} + ' ' + ${author.surname}">Nome Autore</a>
-        </li>
-    </ul>
+    <div th:if="${authors==null || authors.isEmpty()}" style="text-align: center; color: dimgray; margin-top: 50px;">
+        <p>Non ci sono autori nel sistema al momento.</p>
+    </div>
+    
+    <div class="home-grid" th:unless="${authors==null || authors.isEmpty()}">
+        <a th:each="author : ${authors}" th:href="@{'/authors/' + ${author.id}}" class="home-card" style="text-decoration: none;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🎤</div>
+            <div class="home-card-title" th:text="${author.name} + ' ' + ${author.surname}" style="color: var(--primary-color);">Nome Autore</div>
+            <div style="font-size: 0.9rem; color: dimgray; margin-top: auto;">
+                Scopri di più &rarr;
+            </div>
+        </a>
+    </div>
 </body>
 
 </html>

@@ -34,15 +34,16 @@
         </div>
         
         <p class="description">
-            <strong>Prezzo:</strong> €<span th:text="${cd.price}">Prezzo</span><br>
+            <strong>Prezzo:</strong> €<span th:text="${#numbers.formatDecimal(cd.price, 1, 2)}">Prezzo</span><br>
             <strong>Quantità Disponibile:</strong> <span th:text="${cd.availableQuantity}">Quantità</span><br>
             <strong>Etichetta Discografica:</strong> <span th:text="${cd.recordLabel}">Etichetta</span><br>
             <strong>Autore:</strong> 
             <a th:if="${cd.author}" th:href="@{'/authors' + '/' + ${cd.author.id}}" th:text="${cd.author.name} + ' ' + ${cd.author.surname}">Autore</a>
-            <span th:unless="${cd.author}">Non specificato</span>
+            <span th:unless="${cd.author}">Non specificato</span><br>
+            <strong>Valutazione:</strong> <span style="color: #ffca28; font-weight: bold; text-shadow: 0 0 1px rgba(0,0,0,0.2);">★ <span th:text="${#numbers.formatDecimal(cd.averageRating, 1, 'POINT', 1, 'POINT')}">0.0</span>/5.0</span>
         </p>
 
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 20px;" th:unless="${isAdmin}">
             <a th:href="@{'/cart/add/' + ${cd.id}}" class="btn-action" style="background-color: #ff9800; color: white;">Prenota questo CD</a>
         </div>
 
