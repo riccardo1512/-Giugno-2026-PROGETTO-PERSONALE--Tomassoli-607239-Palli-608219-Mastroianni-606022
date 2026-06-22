@@ -25,20 +25,21 @@ public class CD {
     @NotBlank
     private String name;
     // private String description;
-    
+
     @Min(0)
     private double price;
-    
+
     @Min(0)
     private int availableQuantity;
 
     @NotFutureYear
+    @Min(0)
     private int yearOfRelease;
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    
+
     private String recordLabel;
     private List<String> songs;
 
