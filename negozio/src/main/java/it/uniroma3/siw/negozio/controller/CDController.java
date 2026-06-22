@@ -43,6 +43,7 @@ public class CDController {
     public String createForm(Model model) {
         model.addAttribute("cd", new CD());
         model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
         return "admin/cds/formCD";
     }
 
@@ -52,6 +53,7 @@ public class CDController {
         cdValidator.validate(cd, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("authors", authorService.findAll());
+            model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
             return "admin/cds/formCD";
         }
         cdService.save(cd);
@@ -66,6 +68,7 @@ public class CDController {
         }
         model.addAttribute("cd", optional.get());
         model.addAttribute("authors", authorService.findAll());
+        model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
         return "admin/cds/formCD";
     }
 

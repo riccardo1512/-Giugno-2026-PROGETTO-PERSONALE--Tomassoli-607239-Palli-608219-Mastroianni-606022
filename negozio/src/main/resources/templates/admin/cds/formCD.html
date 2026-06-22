@@ -44,7 +44,13 @@
 
         <div>
             <label>Genere:</label>
-            <input type="text" th:field="*{genre}" required />
+            <select th:field="*{genre}" required>
+                <option value="" th:text="'--- Seleziona Genere ---'"></option>
+                <option th:each="g : ${genres}" 
+                        th:value="${g}" 
+                        th:text="${g}">
+                </option>
+            </select>
             <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}">Errore</span>
         </div>
 

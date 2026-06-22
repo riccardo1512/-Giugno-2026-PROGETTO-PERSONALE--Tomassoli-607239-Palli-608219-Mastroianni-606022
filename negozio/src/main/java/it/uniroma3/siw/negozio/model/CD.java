@@ -8,6 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import it.uniroma3.siw.negozio.validation.NotFutureYear;
 
 @Entity
 public class CD {
@@ -16,16 +22,27 @@ public class CD {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String name;
     // private String description;
+    
+    @Min(0)
     private double price;
+    
+    @Min(0)
     private int availableQuantity;
 
+    @NotFutureYear
     private int yearOfRelease;
-    private String genre;
+    
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
+    
     private String recordLabel;
     private List<String> songs;
 
+    @NotNull
     @ManyToOne
     private Author author;
 
@@ -75,11 +92,11 @@ public class CD {
         this.yearOfRelease = yearOfRelease;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
