@@ -32,7 +32,9 @@
     <div id="react-reviews-root"></div>
 
     <br>
-    <a th:href="@{'/cds/' + ${cd.id}}" class="back-link">Torna al CD</a>
+    <div style="text-align: center;">
+        <a th:href="@{'/cds/' + ${cd.id}}" class="back-link" style="display: inline-block;">Torna al CD</a>
+    </div>
 
     <!-- Passiamo i dati iniziali a React tramite window. Questo evita chiamate API complesse all'avvio. -->
     <script th:inline="javascript">

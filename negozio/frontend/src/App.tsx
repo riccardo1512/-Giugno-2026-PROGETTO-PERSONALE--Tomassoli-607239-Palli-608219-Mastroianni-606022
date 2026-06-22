@@ -41,8 +41,6 @@ function StarRating({ rating, setRating }: { rating: number, setRating: (r: numb
           style={{
             cursor: 'pointer',
             fontSize: '28px',
-            // Se la stella corrente è minore o uguale al valore "hover" (se ci stiamo passando sopra) 
-            // oppure al valore "rating" selezionato, la coloriamo di giallo acceso, altrimenti grigio scuro.
             color: star <= (hover || rating) ? '#ffeb3b' : '#444',
             transition: 'color 0.2s'
           }}
@@ -58,13 +56,7 @@ function StarRating({ rating, setRating }: { rating: number, setRating: (r: numb
 }
 
 function App() {
-  // Leggiamo i dati iniziali iniettati da Thymeleaf in reactReviews.html
-  // In questo modo evitiamo una chiamata fetch() "inutile" all'avvio.
-  const cdData = window.SIW_CD_DATA || { reviews: [], isLoggedIn: false };
-
-  // Stato React per la lista delle recensioni. 
-  // Inizializzato con i dati ricevuti da Thymeleaf.
-  const [reviews, setReviews] = useState<Review[]>(cdData.reviews);
+  const cdData = window.SIW_CD_DATA || { id: 0, name: '', reviews: [], isLoggedIn: false, csrfToken: '', currentUserUsername: '', isAdmin: false };
 
   // Stato React per i campi del nuovo form (Titolo, Voto, Testo)
   const [newTitle, setNewTitle] = useState('');
@@ -73,18 +65,15 @@ function App() {
 
   // Funzione che scatta quando clicchi "Salva Recensione"
   const handleSubmit = async (e: React.FormEvent) => {
-    // Evita che la pagina si ricarichi (comportamento standard dei form HTML)
     e.preventDefault();
 
     try {
-      // Facciamo la vera e propria chiamata REST al nostro ReviewRestController.java
       const response = await fetch(`/rest/cds/${cdData.id}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': cdData.csrfToken // Aggiungiamo il token di sicurezza CSRF per far felice Spring Boot
+          'X-CSRF-TOKEN': cdData.csrfToken
         },
-        // Inviamo i dati come JSON
         body: JSON.stringify({
           title: newTitle,
           rating: newRating,
@@ -93,13 +82,8 @@ function App() {
       });
 
       if (response.ok) {
-        // Se Spring Boot risponde 200 OK, ci restituisce la recensione appena salvata
-        const savedReview: Review = await response.json();
+        alert("Recensione inserita con successo! Torna alla pagina del CD per visualizzarla.");
         
-        // Aggiorniamo lo stato di React (aggiungendo la nuova recensione in fondo)
-        // Questo farà aggiornare automaticamente l'interfaccia!
-        setReviews([...reviews, savedReview]);
-
         // Svuotiamo i campi del form
         setNewTitle('');
         setNewText('');
@@ -113,109 +97,52 @@ function App() {
     }
   };
 
-  // Funzione per eliminare una recensione
-  const handleDelete = async (reviewId: number) => {
-    if (!window.confirm("Sei sicuro di voler eliminare questa recensione?")) return;
-
-    try {
-      const response = await fetch(`/rest/cds/${cdData.id}/reviews/${reviewId}`, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-TOKEN': cdData.csrfToken
-        }
-      });
-
-      if (response.ok) {
-        // Rimuoviamo la recensione dallo stato
-        setReviews(reviews.filter(r => r.id !== reviewId));
-      } else {
-        alert("Errore durante l'eliminazione della recensione.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Errore di rete.");
-    }
-  };
-
   return (
-    <div style={{ marginTop: '20px' }}>
+    <div className="reviews-wrapper">
       
-      {/* Se l'utente è loggato, mostra il form per inserire una recensione */}
       {cdData.isLoggedIn ? (
-        <div style={{ backgroundColor: '#212121', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-          <h3>Aggiungi una Recensione (Componente React)</h3>
+        <div className="review-form-container glass-panel">
+          <h3 className="section-title">Aggiungi una Recensione</h3>
           
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Titolo:</label>
-              {/* Quando scrivi nell'input, aggiorniamo lo stato setNewTitle */}
+          <form onSubmit={handleSubmit} className="review-form">
+            <div className="form-group">
+              <label>Titolo:</label>
               <input 
                 type="text" 
                 value={newTitle} 
                 onChange={(e) => setNewTitle(e.target.value)} 
                 required 
-                style={{ width: '100%', padding: '8px', borderRadius: '4px' }}
+                className="form-input"
+                placeholder="Un titolo accattivante..."
               />
             </div>
-
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Voto:</label>
-              {/* Sostituiamo il brutto input numerico con il nostro componente a stelle! */}
+            
+            <div className="form-group rating-group">
+              <label>Voto:</label>
               <StarRating rating={newRating} setRating={setNewRating} />
             </div>
 
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Testo:</label>
+            <div className="form-group">
+              <label>Testo:</label>
               <textarea 
                 rows={4} 
                 value={newText} 
                 onChange={(e) => setNewText(e.target.value)} 
                 required 
-                style={{ width: '100%', padding: '8px', borderRadius: '4px' }}
+                className="form-input"
+                placeholder="Scrivi qui la tua opinione..."
               />
             </div>
 
-            <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#bb86fc', color: '#000', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+            <button type="submit" className="btn-submit ripple">
               Salva Recensione
             </button>
           </form>
         </div>
       ) : (
-        <div style={{ marginBottom: '20px' }}>
-          <p><a href="/login" style={{ color: '#bb86fc' }}>Accedi</a> per aggiungere una recensione.</p>
+        <div className="login-prompt glass-panel">
+          <p><a href="/login" className="accent-link">Accedi</a> per aggiungere una recensione.</p>
         </div>
-      )}
-
-      {/* Lista delle Recensioni (Renderizzata in tempo reale) */}
-      <h3>Tutte le Recensioni</h3>
-      
-      {reviews.length === 0 ? (
-        <p>Nessuna recensione presente per questo CD.</p>
-      ) : (
-        // Iteriamo l'array 'reviews' e per ognuna creiamo un div
-        reviews.map((r, index) => (
-          <div key={index} style={{ backgroundColor: '#1e1e1e', padding: '15px', marginBottom: '15px', borderLeft: '4px solid #03dac6', borderRadius: '4px' }}>
-            <h4 style={{ marginTop: 0, marginBottom: '5px' }}>
-              {r.title} <span style={{ color: '#ffeb3b' }}>({r.rating}/5)</span>
-            </h4>
-            <div style={{ fontSize: '0.9em', color: '#aaaaaa', marginBottom: '10px' }}>
-              Di: {r.author?.username || 'Utente'}
-            </div>
-            <p style={{ margin: 0 }}>{r.text}</p>
-            
-            {/* Pulsante elimina: mostrato solo se l'utente loggato è l'autore oppure è un admin */}
-            {cdData.isLoggedIn && (cdData.isAdmin || r.author?.username === cdData.currentUserUsername) && (
-              <div style={{ marginTop: '10px', textAlign: 'right' }}>
-                <button 
-                  onClick={() => handleDelete(r.id)} 
-                  style={{ backgroundColor: 'transparent', color: 'crimson', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
-                >
-                  Elimina
-                </button>
-              </div>
-            )}
-          </div>
-        ))
       )}
 
     </div>

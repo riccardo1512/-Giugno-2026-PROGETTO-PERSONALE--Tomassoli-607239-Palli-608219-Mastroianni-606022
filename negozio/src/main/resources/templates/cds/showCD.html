@@ -42,11 +42,10 @@
             <span th:unless="${cd.author}">Non specificato</span>
         </p>
 
-        <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <a th:href="@{'/cart/add/' + ${cd.id}}" class="btn-action" style="background-color: #ff9800; color: white;">Prenota</a>
-            <a th:href="@{'/cds/' + ${cd.id} + '/reviews'}" class="btn-action">Vedi/Aggiungi Recensioni (Standard)</a>
-            <a th:href="@{'/cds/' + ${cd.id} + '/react-reviews'}" class="btn-action">Vedi/Aggiungi Recensioni (React)</a>
+        <div style="margin-top: 20px;">
+            <a th:href="@{'/cart/add/' + ${cd.id}}" class="btn-action" style="background-color: #ff9800; color: white;">Prenota questo CD</a>
         </div>
+
         <div th:if="${isAdmin}" style="margin-top: 30px;">
             <hr>
             <h3>Amministrazione</h3>
@@ -54,6 +53,36 @@
             <form th:action="@{'/admin/cds/' + ${cd.id} + '/delete'}" method="POST" style="display:inline; background:none; padding:0; box-shadow:none; border:none; margin-left:10px;">
                 <button type="submit" class="btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo CD? Le eventuali copie di questo CD presenti nelle prenotazioni degli utenti verranno eliminate anch\'esse.')">Elimina CD</button>
             </form>
+        </div>
+    </div>
+
+    <div class="reviews-wrapper" th:if="${cd}" style="margin-bottom: 40px;">
+        <h3 class="section-title">Recensioni degli Utenti</h3>
+        
+        <div th:if="${cd.reviews == null || cd.reviews.isEmpty()}">
+            <p class="empty-reviews">Nessuna recensione presente per questo CD. Sii il primo a scriverne una!</p>
+        </div>
+        
+        <div th:unless="${cd.reviews == null || cd.reviews.isEmpty()}" class="reviews-list">
+            <div th:each="r : ${cd.reviews}" class="review-item glass-panel" style="margin-bottom: 15px;">
+                <div class="review-header">
+                    <h4 th:text="${r.title}">Titolo</h4>
+                    <span class="review-rating" th:text="'(' + ${r.rating} + '/5)'">Voto</span>
+                </div>
+                <div class="review-author">
+                    Di: <strong th:text="${r.author.username}">Utente</strong>
+                </div>
+                <p class="review-text" th:text="${r.text}">Testo recensione...</p>
+                
+                <div th:if="${userDetails != null and (isAdmin or r.author.username == currentUserUsername)}" class="review-actions">
+                    <a th:href="@{'/cds/' + ${cd.id} + '/reviews/' + ${r.id} + '/delete'}" class="btn-delete" style="text-decoration: none;" onclick="return confirm('Sei sicuro di voler eliminare questa recensione?');">Elimina</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
+            <a th:href="@{'/cds/' + ${cd.id} + '/reviews'}" class="btn-action">Scrivi Recensione (Standard)</a>
+            <a th:href="@{'/cds/' + ${cd.id} + '/react-reviews'}" class="btn-action">Scrivi Recensione (React)</a>
         </div>
     </div>
 

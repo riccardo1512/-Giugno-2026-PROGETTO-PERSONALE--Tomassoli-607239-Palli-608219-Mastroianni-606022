@@ -86,7 +86,9 @@ public class ReviewController {
                 review.setAuthor(user);
                 review.setCd(cd);
                 reviewService.save(review);
-                return "redirect:/cds/" + cd.getId() + "/reviews";
+                // Dopo aver salvato la recensione, rimandiamo l'utente alla pagina del CD 
+                // così può vedere l'elenco completo delle recensioni (compresa la sua appena inserita)
+                return "redirect:/cds/" + cd.getId();
             }
         }
         model.addAttribute("cd", cd);
@@ -104,7 +106,7 @@ public class ReviewController {
                 reviewService.delete(review);
             }
         }
-        return "redirect:/cds/" + cdId + "/reviews";
+        return "redirect:/cds/" + cdId;
     }
 
     @GetMapping("/cds/{id}/react-reviews")

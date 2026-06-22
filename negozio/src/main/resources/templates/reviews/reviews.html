@@ -26,61 +26,44 @@
         </div>
     </header>
 
-    <h1>Recensioni per <span th:text="${cd.name}">CD</span></h1>
+    <div class="reviews-wrapper">
+        <h1 class="section-title">Recensioni per <span th:text="${cd.name}">CD</span></h1>
 
-    <div th:if="${userDetails}" style="margin-bottom: 30px; background-color: #212121; padding: 20px; border-radius: 8px;">
-        <h3>Aggiungi una Recensione</h3>
-        <form th:action="@{'/cds/' + ${cd.id} + '/reviews'}" th:object="${review}" method="POST">
-            <div class="form-group">
-                <label>Titolo:</label>
-                <input type="text" th:field="*{title}" required />
-                <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span>
-            </div>
-            
-            <div class="form-group">
-                <label>Voto (1-5):</label>
-                <input type="number" th:field="*{rating}" min="1" max="5" required />
-                <span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="error"></span>
-            </div>
+        <div th:if="${userDetails}" class="review-form-container glass-panel">
+            <h3 class="section-title">Aggiungi una Recensione</h3>
+            <form th:action="@{'/cds/' + ${cd.id} + '/reviews'}" th:object="${review}" method="POST" class="review-form">
+                <div class="form-group">
+                    <label>Titolo:</label>
+                    <input type="text" th:field="*{title}" required class="form-input" placeholder="Un titolo accattivante..." />
+                    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label>Voto (1-5):</label>
+                    <input type="number" th:field="*{rating}" min="1" max="5" required class="form-input" />
+                    <span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="error"></span>
+                </div>
 
-            <div class="form-group">
-                <label>Testo:</label>
-                <textarea th:field="*{text}" required rows="4" style="width: 100%; border-radius: 4px; padding: 10px;"></textarea>
-                <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}" class="error"></span>
-            </div>
+                <div class="form-group">
+                    <label>Testo:</label>
+                    <textarea th:field="*{text}" required rows="4" class="form-input" placeholder="Scrivi qui la tua opinione..."></textarea>
+                    <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}" class="error"></span>
+                </div>
 
-            <button type="submit" class="btn-action" style="margin-top: 10px;">Salva Recensione</button>
-        </form>
-    </div>
+                <button type="submit" class="btn-submit">Salva Recensione</button>
+            </form>
+        </div>
 
-    <div th:unless="${userDetails}" style="margin-bottom: 20px;">
-        <p><a href="/login" style="color: #bb86fc;">Accedi</a> per aggiungere una recensione.</p>
-    </div>
+        <div th:unless="${userDetails}" class="login-prompt glass-panel">
+            <p><a href="/login" class="accent-link">Accedi</a> per aggiungere una recensione.</p>
+        </div>
 
-    <h3>Tutte le Recensioni</h3>
-    <div th:if="${cd.reviews == null || cd.reviews.isEmpty()}">
-        <p>Nessuna recensione presente per questo CD.</p>
     </div>
     
-    <div th:unless="${cd.reviews == null || cd.reviews.isEmpty()}">
-        <div th:each="r : ${cd.reviews}" style="background-color: #1e1e1e; padding: 15px; margin-bottom: 15px; border-left: 4px solid #bb86fc; border-radius: 4px;">
-            <h4 style="margin-top: 0; margin-bottom: 5px;">
-                <span th:text="${r.title}">Titolo</span> 
-                <span style="color: #ffeb3b;" th:text="'(' + ${r.rating} + '/5)'">Voto</span>
-            </h4>
-            <div style="font-size: 0.9em; color: #aaaaaa; margin-bottom: 10px;">
-                Di: <span th:text="${r.author.username}">Utente</span>
-            </div>
-            <p style="margin: 0;" th:text="${r.text}">Testo recensione...</p>
-            
-            <div th:if="${userDetails != null and (isAdmin or r.author.username == currentUserUsername)}" style="margin-top: 10px; text-align: right;">
-                <a th:href="@{'/cds/' + ${cd.id} + '/reviews/' + ${r.id} + '/delete'}" class="btn-danger-link" onclick="return confirm('Sei sicuro di voler eliminare questa recensione?');">Elimina</a>
-            </div>
-        </div>
-    </div>
-
     <br>
-    <a th:href="@{'/cds/' + ${cd.id}}" class="back-link">Torna al CD</a>
+    <div style="text-align: center;">
+        <a th:href="@{'/cds/' + ${cd.id}}" class="back-link" style="display: inline-block;">Torna al CD</a>
+    </div>
 
 </body>
 
