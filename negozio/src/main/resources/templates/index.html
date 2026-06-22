@@ -34,9 +34,13 @@
     </ul>
 
     <div th:if="${isAdmin}">
+        <br>
+        <hr>
         <h2>Gestisci (Riservato agli amministratori)</h2>
         <div>
-            <a href="/admin/index">Pannello inserimenti e modifiche</a>
+            <ul>
+                <li><a href="/admin/index">Pannello inserimenti e cancellazioni</a></li>
+            </ul>
         </div>
     </div>
 </body>

@@ -10,11 +10,12 @@
     <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
     <h1 th:text="${cd.id != null ? 'Modifica CD' : 'Nuovo CD'}">Gestione CD</h1>
 
-    <div th:if="${#fields.hasGlobalErrors()}" class="error">
-        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore Generico</p>
-    </div>
-
     <form th:action="@{/admin/cds}" method="POST" th:object="${cd}">
+        
+        <div th:if="${#fields.hasGlobalErrors()}" class="error">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore Generico</p>
+        </div>
+
         <input type="hidden" th:field="*{id}" />
 
         <div>

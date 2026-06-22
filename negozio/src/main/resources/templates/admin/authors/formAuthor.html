@@ -15,6 +15,9 @@
     </div>
 
     <form th:action="@{/admin/authors}" method="POST" th:object="${author}">
+        <div th:if="${#fields.hasGlobalErrors()}" class="error">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">Errore Generico</p>
+        </div>
         <input type="hidden" th:field="*{id}" />
 
         <div>
