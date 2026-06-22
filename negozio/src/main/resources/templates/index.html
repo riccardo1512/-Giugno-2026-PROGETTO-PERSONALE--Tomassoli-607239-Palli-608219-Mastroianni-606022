@@ -12,6 +12,7 @@
             </div>
             <div class="nav-actions">
                 <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/cart" style="font-size: 1.2em; text-decoration: none;">🛒 Carrello</a>
                     <span th:text="${userDetails.username}"></span>
                     <form th:action="@{/logout}" method="POST">
                         <button type="submit" class="btn-logout">Logout</button>
@@ -35,6 +36,17 @@
             <span class="home-card-icon">🎤</span>
             <span class="home-card-title">Autori</span>
         </a>
+    </div>
+
+    <div th:if="${userDetails}" style="margin-bottom: 40px;">
+        <a href="/reservations" class="home-card">
+            <span class="home-card-icon">📅</span>
+            <span class="home-card-title">Le mie prenotazioni</span>
+        </a>
+    </div>
+
+    <div th:unless="${userDetails}" style="text-align: center; margin-top: 20px;">
+        <p><a href="/login" style="font-weight: bold; text-decoration: underline;">Accedi</a> per vedere le tue prenotazioni.</p>
     </div>
 
 

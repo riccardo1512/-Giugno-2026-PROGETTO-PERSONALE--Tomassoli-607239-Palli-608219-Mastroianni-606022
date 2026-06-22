@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Il tuo Carrello</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/cart" style="font-size: 1.2em; text-decoration: none;">🛒 Carrello</a>
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <h1 style="text-align: center; margin-top: 40px; color: var(--primary-color);">Il tuo Carrello 🛒</h1>
+
+    <div th:if="${cart.items == null || cart.items.isEmpty()}" style="text-align: center; margin-top: 50px;">
+        <p style="font-size: 1.2em; color: dimgray;">Il tuo carrello è vuoto.</p>
+        <a href="/cds" class="btn-action" style="margin-top: 20px;">Vai al Negozio</a>
+    </div>
+
+    <div th:if="${cart.items != null && !cart.items.isEmpty()}" style="max-width: 800px; margin: 0 auto; background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px lightgray;">
+        
+        <ul style="border: none; box-shadow: none; margin-bottom: 0;">
+            <li th:each="item : ${cart.items}" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color);">
+                <div style="flex-grow: 1;">
+                    <a th:href="@{'/cds/' + ${item.cd.id}}" style="font-size: 1.1em; color: var(--primary-color); font-weight: bold;">
+                        <span th:text="${item.cd.name}"></span>
+                    </a>
+                    <div style="color: dimgray; font-size: 0.9em;">
+                        Prezzo unitario: €<span th:text="${item.cd.price}">0.00</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="font-weight: bold; font-size: 1.1em;">
+                        Q.tà: <span th:text="${item.quantity}"></span>
+                    </div>
+                    <div style="font-weight: bold; font-size: 1.1em; width: 80px; text-align: right;">
+                        €<span th:text="${item.cd.price * item.quantity}">0.00</span>
+                    </div>
+                    <form th:action="@{'/cart/remove/' + ${item.id}}" method="POST" style="margin: 0; padding: 0; background: none; border: none; box-shadow: none;">
+                        <button type="submit" class="btn-danger-link" title="Rimuovi">❌</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+
+        <div style="margin-top: 30px; text-align: right; border-top: 2px solid var(--primary-color); padding-top: 20px;">
+            <h2 style="margin: 0; color: darkslategray;">Totale: €<span th:text="${total}">0.00</span></h2>
+        </div>
+
+        <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/cds" style="color: dimgray; font-weight: bold; text-decoration: underline;">&lt; Continua gli acquisti</a>
+            <form th:action="@{/cart/checkout}" method="POST" style="margin: 0; padding: 0; background: none; border: none; box-shadow: none;">
+                <button type="submit" class="btn-action" style="background-color: #4caf50; font-size: 1.2em; padding: 12px 30px;">Conferma Prenotazione</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

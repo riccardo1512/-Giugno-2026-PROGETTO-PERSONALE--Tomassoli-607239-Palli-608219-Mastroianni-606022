@@ -7,14 +7,41 @@
 </head>
 
 <body>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <h1>Elementi Prenotati</h1>
-    <div th:if="${reservationItems==null || reservationItems.isEmpty()}">Non ci sono elementi prenotati nel sistema</div>
-    <ul>
+    
+    <div th:if="${reservationItems==null || reservationItems.isEmpty()}" style="text-align: center; margin-top: 50px;">
+        Non ci sono elementi prenotati nel sistema.
+    </div>
+    
+    <ul th:if="${reservationItems!=null && !reservationItems.isEmpty()}">
         <li th:each="reservationItem : ${reservationItems}">
-            <a th:href="@{'/reservationItems/' + ${reservationItem.id}}" th:text="${reservationItem.cd.name} + ' (Quantità: ' + ${reservationItem.quantity} + ')'">Dettaglio Elemento</a>
+            <a th:href="@{'/reservationItems/' + ${reservationItem.id}}">
+                <strong th:text="${reservationItem.cd.name}"></strong>
+                <span th:text="' (Quantità: ' + ${reservationItem.quantity} + ')'"></span>
+            </a>
         </li>
     </ul>
+
+    <a href="/" class="back-link">Torna alla Home</a>
 </body>
 
 </html>

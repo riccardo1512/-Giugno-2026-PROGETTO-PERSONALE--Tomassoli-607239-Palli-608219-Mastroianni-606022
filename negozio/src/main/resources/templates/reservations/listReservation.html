@@ -7,14 +7,42 @@
 </head>
 
 <body>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
-    <h1>Prenotazioni</h1>
-    <div th:if="${reservations==null || reservations.isEmpty()}">Non ci sono prenotazioni nel sistema</div>
-    <ul>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/cart" style="font-size: 1.2em; text-decoration: none;">🛒 Carrello</a>
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <h1>Le mie Prenotazioni</h1>
+    
+    <div th:if="${reservations==null || reservations.isEmpty()}" style="text-align: center; margin-top: 50px;">
+        Non ci sono prenotazioni nel sistema.
+    </div>
+    
+    <ul th:if="${reservations!=null && !reservations.isEmpty()}">
         <li th:each="reservation : ${reservations}">
-            <a th:href="@{'/reservations/' + ${reservation.id}}" th:text="'Prenotazione del ' + ${reservation.date} + ' - Stato: ' + ${reservation.state}">Dettaglio Prenotazione</a>
+            <a th:href="@{'/reservations/' + ${reservation.id}}">
+                <strong th:text="'Prenotazione del ' + ${reservation.date}"></strong>
+                <span th:text="' - Stato: ' + ${reservation.state}"></span>
+            </a>
         </li>
     </ul>
+
+    <a href="/" class="back-link">Torna alla Home</a>
 </body>
 
 </html>

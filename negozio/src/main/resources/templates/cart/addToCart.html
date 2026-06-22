@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Aggiungi al Carrello</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/cart" style="font-size: 1.2em; text-decoration: none;">🛒 Carrello</a>
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="details-card" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <h1 class="details-title" style="color: var(--primary-color);">Aggiungi al Carrello</h1>
+        <h2 th:text="${cd.name}" style="margin-top: 0; color: dimgray;">Titolo CD</h2>
+        
+        <p class="description" style="text-align: center; margin-bottom: 30px;">
+            Prezzo unitario: €<strong th:text="${cd.price}">0.00</strong><br>
+            Autore: <span th:if="${cd.author}" th:text="${cd.author.name} + ' ' + ${cd.author.surname}"></span><span th:unless="${cd.author}">Non specificato</span>
+        </p>
+
+        <form th:action="@{'/cart/add/' + ${cd.id}}" method="POST" style="background: none; border: none; box-shadow: none; padding: 0; margin-bottom: 0;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                <label for="quantity" style="font-size: 1.1em; color: darkslategray;">Quantità desiderata:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" th:max="${cd.availableQuantity}" required style="width: 100px; text-align: center; font-size: 1.2em;" />
+                <button type="submit" class="btn-action" style="background-color: #ff9800; font-size: 1.1em; padding: 10px 30px; margin-top: 10px;">Aggiungi al Carrello</button>
+            </div>
+        </form>
+    </div>
+
+    <a th:href="@{'/cds/' + ${cd.id}}" class="back-link">Torna al CD</a>
+</body>
+
+</html>

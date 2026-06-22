@@ -7,33 +7,55 @@
 </head>
 
 <body>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
-    <h1>Dettagli Elemento Prenotato</h1>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <div th:if="${reservationItem}">
-        <p><strong>CD:</strong> <span th:text="${reservationItem.cd.name}">CD</span></p>
-        <p><strong>Quantità:</strong> <span th:text="${reservationItem.quantity}">Quantità</span></p>
-        <p><strong>Stato Prenotazione:</strong> <span th:text="${reservationItem.reservation.state}">Stato</span></p>
+    <div class="details-card" th:if="${reservationItem}" style="margin-top: 40px;">
+        <h1 class="details-title">Dettagli Elemento</h1>
+        <div class="details-meta">
+            <span>CD: 
+                <a th:href="@{'/cds/' + ${reservationItem.cd.id}}" style="color: var(--primary-color); text-decoration: underline;">
+                    <strong th:text="${reservationItem.cd.name}">CD</strong>
+                </a>
+            </span>
+            <span>Quantità: <strong th:text="${reservationItem.quantity}">Quantità</strong></span>
+            <span>Stato: <strong th:text="${reservationItem.reservation.state}">Stato</strong></span>
+        </div>
 
-        <div th:if="${isAdmin}">
-            <hr>
-            <h3>Amministrazione</h3>
-            <a th:href="@{'/admin/reservationItems/' + ${reservationItem.id} + '/edit'}">Modifica Elemento</a>
-            <form th:action="@{'/admin/reservationItems/' + ${reservationItem.id} + '/delete'}" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare questo elemento?')">Elimina
-                    Elemento</button>
-            </form>
+        <div th:if="${isAdmin}" style="margin-top: 40px;">
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
+            <h3 style="color: dimgray;">Amministrazione</h3>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <a th:href="@{'/admin/reservationItems/' + ${reservationItem.id} + '/edit'}" class="btn-action">Modifica Elemento</a>
+                <form th:action="@{'/admin/reservationItems/' + ${reservationItem.id} + '/delete'}" method="POST" style="margin:0; padding:0; background:none; border:none; box-shadow:none;">
+                    <button type="submit" class="btn-action btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo elemento?')">Elimina Elemento</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div th:unless="${reservationItem}">
+    <div th:unless="${reservationItem}" class="details-card" style="margin-top: 40px; color: crimson; font-weight: bold;">
         L'elemento richiesto non esiste.
     </div>
 
-    <div>
-        <br>
-        <a href="/reservationItems">Torna all'elenco degli elementi prenotati</a>
-    </div>
+    <a th:if="${reservationItem}" th:href="@{'/reservations/' + ${reservationItem.reservation.id}}" class="back-link">Torna alla Prenotazione</a>
+    <a th:unless="${reservationItem}" href="/reservations" class="back-link">Torna alle Prenotazioni</a>
 </body>
 
 </html>
