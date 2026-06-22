@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Author {
@@ -35,6 +36,7 @@ public class Author {
     @Past
     private LocalDate dateOfDeath;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<CD> cds;
 

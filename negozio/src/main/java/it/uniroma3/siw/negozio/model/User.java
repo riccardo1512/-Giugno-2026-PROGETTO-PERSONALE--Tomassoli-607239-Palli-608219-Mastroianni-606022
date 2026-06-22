@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -24,9 +25,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @OneToMany
     private List<Reservation> reservations;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Review> reviews;
 

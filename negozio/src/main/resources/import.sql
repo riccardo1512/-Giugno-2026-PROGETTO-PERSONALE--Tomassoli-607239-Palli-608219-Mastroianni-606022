@@ -30,3 +30,9 @@ INSERT INTO reservation (id, date, state, user_id) VALUES (nextval('reservation_
 INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 2, (select id from cd where name = 'A Night at the Opera'), (select id from reservation where date = '2026-06-15'));
 INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 1, (select id from cd where name = 'Thriller'), (select id from reservation where date = '2026-06-15'));
 INSERT INTO reservation_item (id, quantity, cd_id, reservation_id) VALUES (nextval('reservation_item_seq'), 3, (select id from cd where name = 'The Rise and Fall of Ziggy Stardust'), (select id from reservation where date = '2026-06-18'));
+
+-- Reviews
+INSERT INTO review (id, rating, text, title, author_id, cd_id) VALUES (nextval('review_seq'), 5, 'Un capolavoro assoluto, voce fantastica', 'Eccezionale', (select id from users where username = 'mario'), (select id from cd where name = 'A Night at the Opera'));
+INSERT INTO review (id, rating, text, title, author_id, cd_id) VALUES (nextval('review_seq'), 4, 'Molto bello, ma preferisco altri album', 'Bello', (select id from users where username = 'luigi'), (select id from cd where name = 'A Night at the Opera'));
+INSERT INTO review (id, rating, text, title, author_id, cd_id) VALUES (nextval('review_seq'), 5, 'Il re del pop non delude mai', 'Incredibile', (select id from users where username = 'elena'), (select id from cd where name = 'Thriller'));
+INSERT INTO review (id, rating, text, title, author_id, cd_id) VALUES (nextval('review_seq'), 3, 'Poteva fare di meglio secondo me', 'Nella media', (select id from users where username = 'paolo'), (select id from cd where name = 'Thriller'));

@@ -41,6 +41,10 @@
             <span th:unless="${cd.author}">Non specificato</span>
         </p>
 
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <a th:href="@{'/cds/' + ${cd.id} + '/reviews'}" class="btn-action">Vedi/Aggiungi Recensioni (Standard)</a>
+            <a th:href="@{'/cds/' + ${cd.id} + '/react-reviews'}" class="btn-action">Vedi/Aggiungi Recensioni (React)</a>
+        </div>
         <div th:if="${isAdmin}" style="margin-top: 30px;">
             <hr>
             <h3>Amministrazione</h3>

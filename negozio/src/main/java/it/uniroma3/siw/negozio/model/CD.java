@@ -14,6 +14,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import it.uniroma3.siw.negozio.validation.NotFutureYear;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import it.uniroma3.siw.negozio.validation.NotFutureYear;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class CD {
@@ -47,9 +50,11 @@ public class CD {
     @ManyToOne
     private Author author;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cd")
     private List<ReservationItem> reservationItems;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cd")
     private List<Review> reviews;
 

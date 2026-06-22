@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Recensioni (React App)</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <h1>Recensioni (React) per <span th:text="${cd.name}">CD</span></h1>
+
+    <!-- Il contenitore dove React verrà montato -->
+    <div id="react-reviews-root"></div>
+
+    <br>
+    <a th:href="@{'/cds/' + ${cd.id}}" class="back-link">Torna al CD</a>
+
+    <!-- Passiamo i dati iniziali a React tramite window. Questo evita chiamate API complesse all'avvio. -->
+    <script th:inline="javascript">
+        window.SIW_CD_DATA = {
+            id: /*[[${cd.id}]]*/ 0,
+            name: /*[[${cd.name}]]*/ '',
+            reviews: /*[[${cd.reviews}]]*/ [],
+            isLoggedIn: /*[[${userDetails != null}]]*/ false,
+            csrfToken: /*[[${_csrf != null ? _csrf.token : ''}]]*/ ''
+        };
+    </script>
+    
+    <!-- Carichiamo il file generato da Vite -->
+    <script type="module" th:src="@{/js/react/react-reviews.js}"></script>
+
+</body>
+
+</html>
