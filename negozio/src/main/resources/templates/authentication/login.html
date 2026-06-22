@@ -27,26 +27,46 @@
 			</div>
 		</div>
 	</header>
-	<h1>Login</h1>
-	<form th:action="@{/login}" method="POST">
+	<form th:action="@{/login}" method="POST" class="auth-card">
+		<h1>Accedi</h1>
+		
 		<div>
-			<span>Username:</span>
-			<span><input name="username" type="text" required /></span>
+			<label>Username</label>
+			<input name="username" type="text" required placeholder="Inserisci il tuo username..." />
 		</div>
 		<div>
-			<span>Password:</span>
-			<span><input name="password" type="password" required /></span>
+			<label>Password</label>
+			<input name="password" type="password" required placeholder="La tua password segreta..." />
 		</div>
+		
 		<div>
-			<span th:if="${param.error != null}">Username o password errati</span>
+			<span class="error-message" th:if="${param.error != null}">Username o password errati! Riprova.</span>
 		</div>
-		<div>
-			<span><button type="submit">Login</button></span>
+		
+		<div style="text-align: center; margin-top: 10px;">
+			<button type="submit" style="width: 100%;">Entra nel negozio 🛒</button>
+		</div>
+
+		<hr style="margin: 25px 0; border: 0; border-top: 1px solid lightgray;">
+
+		<div style="text-align: center;">
+			<p style="margin-bottom: 15px; color: dimgray; font-size: 14px;">Oppure accedi con i tuoi social:</p>
+			
+			<a th:href="@{/oauth2/authorization/google}" class="btn-google">
+				<img src="https://www.svgrepo.com/show/475656/google-color.svg" class="auth-icon" alt="Google"/> 
+				Continua con Google
+			</a>
+			
+			<a th:href="@{/oauth2/authorization/github}" class="btn-github">
+				<img src="https://www.svgrepo.com/show/512317/github-142.svg" class="auth-icon" alt="GitHub" style="filter: invert(1);"/> 
+				Continua con GitHub
+			</a>
+		</div>
+
+		<div style="text-align: center; margin-top: 25px; font-size: 14px;">
+			Non hai un account? <a th:href="@{/register}" style="font-weight: bold;">Registrati ora!</a>
 		</div>
 	</form>
-	<div>
-		<a th:href="@{/register}" th:text="Registrati">Registrati</a>
-	</div>
 </body>
 
 </html>

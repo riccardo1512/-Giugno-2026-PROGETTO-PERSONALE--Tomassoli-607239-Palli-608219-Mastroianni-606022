@@ -3,7 +3,7 @@
 
 <head>
 	<title>
-		SiwCalcio - Registrazione
+		Negozio - Registrazione
 	</title>
 	<link rel="stylesheet" href="/css/stile.css" />
 </head>
@@ -27,40 +27,53 @@
 			</div>
 		</div>
 	</header>
-	<h1>Registrazione nuovo utente</h1>
-	<form th:action="@{/register}" method="POST">
+	<form th:action="@{/register}" method="POST" class="auth-card">
+		<h1 style="text-align: center; border: none; margin-top: 0; padding-bottom: 15px;">Registrati</h1>
+        
 		<div>
 			<label>Nome</label>
-			<span><input type="text" placeholder="name" required th:field="${user.name}" /></span>
-			<span th:if="${#fields.hasErrors('user.name')}" th:errors="${user.name}" th:style="'color:red'">
-			</span>
+			<input type="text" placeholder="Mario" required th:field="${user.name}" />
+			<span class="error-message" th:if="${#fields.hasErrors('user.name')}" th:errors="${user.name}"></span>
 		</div>
 		<div>
 			<label>Cognome</label>
-			<span><input type="text" placeholder="surname" required th:field="${user.surname}" /></span>
-			<span th:if="${#fields.hasErrors('user.surname')}" th:errors="${user.surname}" th:style="'color:red'">
-			</span>
+			<input type="text" placeholder="Rossi" required th:field="${user.surname}" />
+			<span class="error-message" th:if="${#fields.hasErrors('user.surname')}" th:errors="${user.surname}"></span>
 		</div>
 
 		<div>
-			<label>Username</label>
-			<span>
-				<input type="text" placeholder="username" required th:field="${credentials.username}" />
-			</span>
-			<span th:if="${#fields.hasErrors('credentials.username')}" th:errors="${credentials.username}"
-				th:style="'color:red'">
-			</span>
+			<label>Username (Email)</label>
+			<input type="text" placeholder="mario.rossi@email.com" required th:field="${credentials.username}" />
+			<span class="error-message" th:if="${#fields.hasErrors('credentials.username')}" th:errors="${credentials.username}"></span>
 		</div>
 		<div>
 			<label>Password</label>
-			<span><input type="password" placeholder="password" required th:field="${credentials.password}" />
-			</span>
-			<span th:if="${#fields.hasErrors('credentials.password')}" th:errors="${credentials.password}"
-				th:style="'color:red'">
-			</span>
+			<input type="password" placeholder="La tua password segreta..." required th:field="${credentials.password}" />
+			<span class="error-message" th:if="${#fields.hasErrors('credentials.password')}" th:errors="${credentials.password}"></span>
 		</div>
-		<div>
-			<button type="submit">Registra</button>
+		
+		<div style="text-align: center; margin-top: 10px;">
+			<button type="submit" style="width: 100%;">Crea Account ✨</button>
+		</div>
+
+		<hr style="margin: 25px 0; border: 0; border-top: 1px solid lightgray;">
+
+		<div style="text-align: center;">
+			<p style="margin-bottom: 15px; color: dimgray; font-size: 14px;">Oppure registrati con i tuoi social:</p>
+			
+			<a th:href="@{/oauth2/authorization/google}" class="btn-google">
+				<img src="https://www.svgrepo.com/show/475656/google-color.svg" class="auth-icon" alt="Google"/> 
+				Continua con Google
+			</a>
+			
+			<a th:href="@{/oauth2/authorization/github}" class="btn-github">
+				<img src="https://www.svgrepo.com/show/512317/github-142.svg" class="auth-icon" alt="GitHub" style="filter: invert(1);"/> 
+				Continua con GitHub
+			</a>
+		</div>
+
+		<div style="text-align: center; margin-top: 25px; font-size: 14px;">
+			Hai già un account? <a th:href="@{/login}" style="font-weight: bold;">Accedi ora!</a>
 		</div>
 	</form>
 </body>
