@@ -7,50 +7,62 @@
 </head>
 
 <body>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
-    <h1>Dettagli Autore</h1>
-
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
     <div th:if="${error}" class="error" style="color:red; margin-bottom: 15px;">
         <p th:text="${error}">Messaggio di errore</p>
     </div>
 
-    <div th:if="${author}">
-        <span th:text="${author.name}">Nome</span>
-        <span th:text="${author.surname}">Cognome</span>
+    <div class="details-card" th:if="${author}">
+        <h1 class="details-title" th:text="${author.name} + ' ' + ${author.surname}">Nome Cognome</h1>
         
-        <div>
-            <strong>Nazionalità:</strong> <span th:text="${author.nationality}">Nazionalità</span>
-        </div>
-        <div>
-            <strong>Data di Nascita:</strong> <span th:text="${author.dateOfBirth}">Data di Nascita</span>
-        </div>
-        <div th:if="${author.dateOfDeath}">
-            <strong>Data di Morte:</strong> <span th:text="${author.dateOfDeath}">Data di Morte</span>
+        <div class="details-meta">
+            <span th:text="'Nazionalità: ' + ${author.nationality}">Nazionalità</span>
+            <span th:text="'Nato: ' + ${author.dateOfBirth}">Data di Nascita</span>
+            <span th:if="${author.dateOfDeath}" th:text="'Morto: ' + ${author.dateOfDeath}">Data di Morte</span>
         </div>
 
-        <div>
-            <strong>CD Musicali:</strong>
+        <div style="margin-top: 20px; text-align: left;">
+            <h3 style="color: var(--primary-color);">CD Musicali:</h3>
             <ul th:if="${not #lists.isEmpty(author.cds)}">
                 <li th:each="cd : ${author.cds}">
                     <a th:href="@{'/cds/' + ${cd.id}}" th:text="${cd.name}">Titolo CD</a>
                     <span th:text="'(' + ${cd.yearOfRelease} + ')'">Anno</span>
                 </li>
             </ul>
-            <span th:if="${#lists.isEmpty(author.cds)}">Nessun CD presente</span>
+            <span th:if="${#lists.isEmpty(author.cds)}" style="color: dimgray;">Nessun CD presente</span>
         </div>
 
-        <div th:if="${isAdmin}">
+        <div th:if="${isAdmin}" style="margin-top: 30px;">
             <hr>
             <h3>Amministrazione</h3>
-            <a th:href="@{'/admin/authors/' + ${author.id} + '/edit'}">Modifica Autore</a>
-            <br><br>
-            <form th:action="@{'/admin/authors/' + ${author.id} + '/delete'}" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Sei sicuro di voler eliminare l\'autore? Se ha ancora CD associati, l\'operazione fallirà.')">Elimina Solo Autore</button>
-            </form>
+            <a th:href="@{'/admin/authors/' + ${author.id} + '/edit'}" class="btn-action">Modifica Autore</a>
             
-            <form th:action="@{'/admin/authors/' + ${author.id} + '/deleteWithCDs'}" method="POST" style="display:inline; margin-left: 10px;">
-                <button type="submit" style="color: red;" onclick="return confirm('ATTENZIONE: Sei sicuro di voler eliminare questo autore E TUTTI I SUOI CD dal negozio in modo irreversibile?')">Elimina Autore + Suoi CD</button>
-            </form>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <form th:action="@{'/admin/authors/' + ${author.id} + '/delete'}" method="POST" style="background:none; padding:0; box-shadow:none; border:none; margin:0;">
+                    <button type="submit" class="btn-danger" onclick="return confirm('Sei sicuro di voler eliminare l\'autore? Se ha ancora CD associati, l\'operazione fallirà.')">Elimina Solo Autore</button>
+                </form>
+                
+                <form th:action="@{'/admin/authors/' + ${author.id} + '/deleteWithCDs'}" method="POST" style="background:none; padding:0; box-shadow:none; border:none; margin:0;">
+                    <button type="submit" class="btn-danger" style="background-color: darkred !important;" onclick="return confirm('ATTENZIONE: Sei sicuro di voler eliminare questo autore E TUTTI I SUOI CD dal negozio in modo irreversibile?')">Elimina Autore + Suoi CD</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -58,10 +70,7 @@
         L'autore richiesto non esiste.
     </div>
 
-    <div>
-        <br>
-        <a href="/authors">Torna all'elenco degli autori</a>
-    </div>
+    <a href="/authors" class="back-link">Torna all'elenco degli autori</a>
 </body>
 
 </html>

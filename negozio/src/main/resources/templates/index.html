@@ -5,42 +5,47 @@
     <link rel="stylesheet" href="/css/stile.css" />
 </head>
 <body>
-    <header>
-        <div th:if="${userDetails}">
-            <span th:text="${userDetails.username}"></span>
-            <a href="/logout">Logout</a>
-        </div>
-        <div th:unless="${userDetails}">
-            <a href="/login">Login</a>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
         </div>
     </header>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
+
     <h1>Consulta il catalogo</h1>
     
-    <div>
-        <a href="/cds">Mostra tutti i CD</a>
-    </div>
-    <div>
-        <a href="/authors">Mostra tutti gli Autori</a>
+    <div class="home-grid">
+        <a href="/cds" class="home-card">
+            <span class="home-card-icon">💿</span>
+            <span class="home-card-title">CD Musicali</span>
+        </a>
+        <a href="/authors" class="home-card">
+            <span class="home-card-icon">🎤</span>
+            <span class="home-card-title">Autori</span>
+        </a>
     </div>
 
-    <h2>Tutti i prodotti:</h2>
-    <div th:if="${cds == null || cds.isEmpty()}">Non ci sono prodotti nel sistema</div>
-    <ul th:if="${cds != null && !cds.isEmpty()}">
-        <li th:each="cd : ${cds}">
-            <a th:href="@{'/cds/' + ${cd.id}}" th:text="${cd.name} + ' (' + ${cd.yearOfRelease} + ')'">Titolo CD</a>
-            <span th:text="'- ' + ${cd.author.name} + ' ' + ${cd.author.surname}"> - Autore</span>
-        </li>
-    </ul>
+
 
     <div th:if="${isAdmin}">
-        <br>
-        <hr>
-        <h2>Gestisci (Riservato agli amministratori)</h2>
-        <div>
-            <ul>
-                <li><a href="/admin/index">Pannello inserimenti e cancellazioni</a></li>
-            </ul>
+        <h2>Gestisci (Riservato agli Amministratori)</h2>
+        <div class="home-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <a href="/admin/index" class="home-card" style="border-color: var(--primary-color);">
+                <span class="home-card-icon">🛠️</span>
+                <span class="home-card-title">Pannello Inserimenti e Cancellazioni</span>
+            </a>
         </div>
     </div>
 </body>

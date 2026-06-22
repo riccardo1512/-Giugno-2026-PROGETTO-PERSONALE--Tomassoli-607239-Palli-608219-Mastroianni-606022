@@ -5,25 +5,37 @@
     <link rel="stylesheet" href="/css/stile.css" />
 </head>
 <body>
-    <header>
-        <div th:if="${userDetails}">
-            Bentornato Admin <span th:text="${userDetails.username}"></span>
-            <a href="/logout">Logout</a>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
         </div>
     </header>
-    <div><a href="/"><img src="/images/logo-siw.png" width="50%" /></a></div>
     <h1>Gestione</h1>
     <h2>(riservato agli amministratori)</h2>
-    <div>	
-        <ul>
-            <li><a href="/admin/cds/new">Aggiungi CD Musicale</a></li>
-            <li><a href="/admin/authors/new">Aggiungi Autore</a></li>
-        </ul>
+    <div class="home-grid">
+        <a href="/admin/cds/new" class="home-card">
+            <span class="home-card-icon">➕</span>
+            <span class="home-card-title">Aggiungi CD Musicale</span>
+        </a>
+        <a href="/admin/authors/new" class="home-card">
+            <span class="home-card-icon">➕</span>
+            <span class="home-card-title">Aggiungi Autore</span>
+        </a>
     </div>
     
-    <div>
-        <br>
-        <a href="/">Torna alla Home</a>
-    </div>
+    <a href="/" class="back-link">Torna alla Home</a>
 </body>
 </html>

@@ -1,0 +1,548 @@
+/* ==========================================================================
+   RESET E VARIABILI BASE
+   ========================================================================== */
+:root {
+    --primary-color: #6200ea;
+    --primary-hover: #3700b3;
+    --background-color: #f8f4fb; /* Sfondo chiarissimo ripristinato */
+    --card-background: white;
+    --text-color: darkslategray;
+    --border-color: lightgray;
+    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --navbar-height: 70px;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   STRUTTURA PRINCIPALE E LAYOUT
+   ========================================================================== */
+/* Container principale: centra il contenuto e lo mantiene leggibile */
+body>div:not(.navbar-container),
+body>h1,
+body>h2,
+body>h3,
+body>form,
+body>p {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+body>ul {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - 40px); /* Previene il problema del padding interno sulla card */
+}
+
+/* Navbar unificata */
+header.navbar {
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: var(--navbar-height);
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand img {
+    height: 50px;
+    width: auto;
+    display: block;
+    /* Rimosso il filtro che rendeva il logo un blocco bianco */
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-actions a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-actions a:hover {
+    color: lightgray;
+    text-decoration: underline;
+}
+
+.nav-actions span {
+    font-weight: bold;
+    color: white;
+}
+
+.nav-actions form {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.btn-logout {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.btn-logout:hover {
+    background-color: white;
+    color: var(--primary-color);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   TIPOGRAFIA E LINK
+   ========================================================================== */
+h1 {
+    color: var(--primary-color);
+    border-bottom: 3px solid #b388ff;
+    padding-bottom: 5px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: dimgray;
+    margin-top: 30px;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   LISTE (Tornei, Squadre, ecc.)
+   ========================================================================== */
+ul {
+    list-style-type: none;
+    padding: 0;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px lightgray;
+    margin-bottom: 30px;
+    overflow: hidden;
+    /* Applica il radius anche ai figli */
+}
+
+li {
+    padding: 0;
+    /* Padding rimosso da li e messo su a per renderlo tutto cliccabile */
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+li:hover {
+    background-color: whitesmoke;
+}
+
+/* Rimuove il bordo dall'ultimo elemento della lista */
+li:last-child {
+    border-bottom: none;
+}
+
+li a {
+    display: block;
+    padding: 15px 20px;
+    /* Spostato qui */
+    font-weight: bold;
+    color: darkslategray;
+}
+
+li a:hover {
+    color: var(--primary-hover);
+    text-decoration: none;
+}
+
+li span {
+    display: inline-block;
+    padding: 15px 20px;
+}
+
+/* ==========================================================================
+   FORM, INPUT E BOTTONI
+   ========================================================================== */
+form:not([style*="inline"]):not(header form) {
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 6px 15px lightgray;
+    margin-bottom: 30px;
+}
+
+header form {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+form[style*="inline"] {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+/* Le etichette dei form */
+form label,
+form span {
+    font-weight: bold;
+    color: dimgray;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    display: inline-block;
+    border: 1px solid silver;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px #b388ff;
+}
+
+button,
+input[type="submit"],
+.btn-action {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover,
+input[type="submit"]:hover,
+.btn-action:hover {
+    background-color: var(--primary-hover);
+    color: white;
+    text-decoration: none;
+}
+
+button:active,
+input[type="submit"]:active,
+.btn-action:active {
+    background-color: var(--primary-color);
+}
+
+/* Stili specifici per bottoni di eliminazione e link back */
+.btn-danger {
+    background-color: crimson !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background-color: darkred !important;
+}
+
+.btn-danger-link {
+    background-color: transparent !important;
+    color: crimson !important;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.9em !important;
+    text-decoration: underline !important;
+    box-shadow: none !important;
+    display: inline !important;
+    cursor: pointer;
+}
+
+.btn-danger-link:hover {
+    color: darkred !important;
+    background-color: transparent !important;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin: 30px auto;
+    padding: 10px 20px;
+    background-color: whitesmoke;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    width: fit-content;
+    color: darkslategray;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    background-color: lightgray;
+    color: black;
+    text-decoration: none;
+}
+
+/* Stile per i messaggi di errore nella validazione */
+span[th\:errors],
+.error-message {
+    color: crimson;
+    font-size: 0.9em;
+    display: block;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   IMMAGINI
+   ========================================================================== */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ==========================================================================
+   COMPONENTI SPECIFICI (Grid e Tabelle)
+   ========================================================================== */
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.home-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: darkslategray;
+    box-shadow: 0 2px 4px lightgray;
+    transition: background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.home-card:hover {
+    background-color: whitesmoke;
+    text-decoration: none;
+    color: var(--primary-hover);
+}
+
+.home-card-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.home-card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Stile per Tabelle (Classifica) */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 1em;
+    font-family: var(--font-family);
+    box-shadow: 0 4px 6px lightgray;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.styled-table thead tr {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--card-background);
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: whitesmoke;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.styled-table tbody tr.first-place {
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: #f3e5f5 !important;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f3e5f5;
+}
+
+/* ==========================================================================
+   DETTAGLI RISORSE (Show pages)
+   ========================================================================== */
+.details-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px lightgray;
+    text-align: center;
+}
+
+.details-title {
+    color: var(--primary-color);
+    font-size: 2.5em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: none;
+}
+
+.details-meta {
+    color: dimgray;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.details-meta span {
+    background-color: whitesmoke;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid lightgray;
+}
+
+.details-card p.description {
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: darkslategray;
+    text-align: justify;
+}
+
+/* ==========================================================================
+   UTILITY PER LOGIN
+   ========================================================================== */
+.auth-card {
+    max-width: 450px !important;
+    margin-top: 50px !important;
+    padding: 40px !important;
+}
+
+.auth-card h1 {
+    text-align: center;
+    border-bottom: none;
+    margin-top: 0;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-google {
+    background-color: white;
+    color: dimgray;
+    border: 1px solid silver;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-google:hover {
+    background-color: whitesmoke;
+    color: black;
+}
+
+.btn-github {
+    background-color: dimgray;
+    color: white;
+    border: 1px solid dimgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-github:hover {
+    background-color: black;
+    color: white;
+}
+
+.auth-icon {
+    width: 20px;
+    height: 20px;
+}
