@@ -58,11 +58,17 @@
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
             <h3 style="color: dimgray;">Amministrazione</h3>
             <div style="display: flex; justify-content: center; gap: 15px;">
-                <a th:href="@{'/admin/reservations/' + ${reservation.id} + '/edit'}" class="btn-action">Modifica Prenotazione</a>
+                <a th:href="@{'/admin/reservations/' + ${reservation.id} + '/edit'}" class="btn-action">Modifica Stato</a>
                 <form th:action="@{'/admin/reservations/' + ${reservation.id} + '/delete'}" method="POST" style="margin:0; padding:0; background:none; border:none; box-shadow:none;">
-                    <button type="submit" class="btn-action btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione?')">Elimina Prenotazione</button>
+                    <button type="submit" class="btn-action btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questa prenotazione? Verrà rimossa dal database.')">Elimina Prenotazione</button>
                 </form>
             </div>
+        </div>
+
+        <div th:if="${!isAdmin && reservation.state == T(it.uniroma3.siw.negozio.model.ReservationState).PENDING}" style="margin-top: 30px; text-align: center;">
+            <form th:action="@{'/reservations/' + ${reservation.id} + '/cancel'}" method="POST" style="margin:0; padding:0; background:none; border:none; box-shadow:none;">
+                <button type="submit" class="btn-action btn-danger" onclick="return confirm('Vuoi annullare questa prenotazione?')" style="background-color: crimson; color: white;">Annulla Prenotazione</button>
+            </form>
         </div>
     </div>
 

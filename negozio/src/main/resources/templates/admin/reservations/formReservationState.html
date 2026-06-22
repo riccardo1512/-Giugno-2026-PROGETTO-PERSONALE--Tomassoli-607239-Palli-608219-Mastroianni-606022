@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Modifica Stato Prenotazione</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="/"><img src="/images/logo.png" alt="Logo" /></a>
+            </div>
+            <div class="nav-actions">
+                <div th:if="${userDetails}" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="/cart" style="font-size: 1.2em; text-decoration: none;">🛒 Carrello</a>
+                    <span th:text="${userDetails.username}"></span>
+                    <form th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn-logout">Logout</button>
+                    </form>
+                </div>
+                <div th:unless="${userDetails}">
+                    <a href="/login">Accedi</a> | <a href="/register">Registrati</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="details-card" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <h1 class="details-title" style="color: dimgray;">Modifica Stato</h1>
+        
+        <p class="description" style="text-align: center; margin-bottom: 30px;">
+            Stai modificando lo stato della prenotazione ID: <strong th:text="${reservation.id}"></strong><br>
+            Utente: <span th:text="${reservation.user.username}"></span><br>
+            Stato Attuale: <strong th:text="${reservation.state}" style="color: var(--primary-color);"></strong>
+        </p>
+
+        <form th:action="@{'/admin/reservations/' + ${reservation.id} + '/edit'}" method="POST" style="background: none; border: none; box-shadow: none; padding: 0; margin-bottom: 0;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                <label for="state" style="font-size: 1.1em; color: darkslategray;">Nuovo Stato:</label>
+                <select id="state" name="state" required style="width: 200px; font-size: 1.1em; padding: 8px;">
+                    <option th:each="st : ${states}" th:value="${st}" th:text="${st}" th:selected="${st == reservation.state}"></option>
+                </select>
+                <p style="font-size: 0.9em; color: crimson;">Attenzione: Cambiare lo stato in CANCELLED ripristinerà automaticamente le quantità dei CD in magazzino.</p>
+                <button type="submit" class="btn-action" style="margin-top: 10px;">Salva Modifiche</button>
+            </div>
+        </form>
+    </div>
+
+    <a th:href="@{'/reservations/' + ${reservation.id}}" class="back-link">Torna alla Prenotazione</a>
+</body>
+
+</html>

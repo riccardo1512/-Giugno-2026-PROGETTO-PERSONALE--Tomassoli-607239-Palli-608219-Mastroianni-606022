@@ -34,6 +34,11 @@ public class ReservationService {
         return reservationRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public List<Reservation> findByUserAndStateNot(User user, it.uniroma3.siw.negozio.model.ReservationState state) {
+        return reservationRepository.findByUserAndStateNot(user, state);
+    }
+
     @Transactional
     public Reservation save(Reservation reservation) {
         return reservationRepository.save(reservation);

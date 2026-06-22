@@ -38,7 +38,7 @@
         </a>
     </div>
 
-    <div th:if="${userDetails}" style="margin-bottom: 40px;">
+    <div th:if="${userDetails != null and !isAdmin}" style="margin-bottom: 40px;">
         <a href="/reservations" class="home-card">
             <span class="home-card-icon">📅</span>
             <span class="home-card-title">Le mie prenotazioni</span>
@@ -57,6 +57,10 @@
             <a href="/admin/index" class="home-card" style="border-color: var(--primary-color);">
                 <span class="home-card-icon">🛠️</span>
                 <span class="home-card-title">Pannello Inserimenti e Cancellazioni</span>
+            </a>
+            <a href="/admin/reservations" class="home-card" style="border-color: var(--primary-color);">
+                <span class="home-card-icon">📅</span>
+                <span class="home-card-title">Gestisci prenotazioni</span>
             </a>
         </div>
     </div>

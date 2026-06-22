@@ -125,9 +125,15 @@ public class CartController {
         }
         
         if (existingItem != null) {
+            if (existingItem.getQuantity() + quantity > cd.getAvailableQuantity()) {
+                return "redirect:/cart?error=stock_exceeded";
+            }
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
             reservationItemService.save(existingItem);
         } else {
+            if (quantity > cd.getAvailableQuantity()) {
+                return "redirect:/cart?error=stock_exceeded";
+            }
             ReservationItem newItem = new ReservationItem();
             newItem.setCd(cd);
             newItem.setQuantity(quantity);
@@ -165,6 +171,21 @@ public class CartController {
         
         Reservation cart = reservationService.getCart(currentUser);
         if (cart.getItems() != null && !cart.getItems().isEmpty()) {
+            // First check if all items are in stock
+            for (ReservationItem item : cart.getItems()) {
+                CD cd = item.getCd();
+                if (cd != null && cd.getAvailableQuantity() < item.getQuantity()) {
+                    return "redirect:/cart?error=stock_exceeded";
+                }
+            }
+            // Deduct stock
+            for (ReservationItem item : cart.getItems()) {
+                CD cd = item.getCd();
+                if (cd != null) {
+                    cd.setAvailableQuantity(cd.getAvailableQuantity() - item.getQuantity());
+                    cdService.save(cd);
+                }
+            }
             cart.setState(ReservationState.PENDING);
             cart.setDate(java.time.LocalDate.now());
             reservationService.save(cart);

@@ -29,6 +29,12 @@
 
     <h1 style="text-align: center; margin-top: 40px; color: var(--primary-color);">Il tuo Carrello 🛒</h1>
 
+    <div th:if="${param.error}" style="text-align: center; margin-top: 20px;">
+        <span class="error-message" style="display: inline-block; padding: 10px; background-color: #ffebee; border: 1px solid crimson; border-radius: 8px;">
+            <strong th:if="${param.error[0] == 'stock_exceeded'}">Scorte insufficienti per uno o più articoli nel carrello.</strong>
+        </span>
+    </div>
+
     <div th:if="${cart.items == null || cart.items.isEmpty()}" style="text-align: center; margin-top: 50px;">
         <p style="font-size: 1.2em; color: dimgray;">Il tuo carrello è vuoto.</p>
         <a href="/cds" class="btn-action" style="margin-top: 20px;">Vai al Negozio</a>
