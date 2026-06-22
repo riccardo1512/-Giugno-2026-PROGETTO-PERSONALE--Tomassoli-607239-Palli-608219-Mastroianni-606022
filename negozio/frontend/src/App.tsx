@@ -17,6 +17,8 @@ interface WindowData {
   reviews: Review[];
   isLoggedIn: boolean;
   csrfToken: string;
+  currentUserUsername: string;
+  isAdmin: boolean;
 }
 
 // Dichiariamo che l'oggetto window ha questa nostra variabile globale
@@ -111,6 +113,30 @@ function App() {
     }
   };
 
+  // Funzione per eliminare una recensione
+  const handleDelete = async (reviewId: number) => {
+    if (!window.confirm("Sei sicuro di voler eliminare questa recensione?")) return;
+
+    try {
+      const response = await fetch(`/rest/cds/${cdData.id}/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': cdData.csrfToken
+        }
+      });
+
+      if (response.ok) {
+        // Rimuoviamo la recensione dallo stato
+        setReviews(reviews.filter(r => r.id !== reviewId));
+      } else {
+        alert("Errore durante l'eliminazione della recensione.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Errore di rete.");
+    }
+  };
+
   return (
     <div style={{ marginTop: '20px' }}>
       
@@ -176,6 +202,18 @@ function App() {
               Di: {r.author?.username || 'Utente'}
             </div>
             <p style={{ margin: 0 }}>{r.text}</p>
+            
+            {/* Pulsante elimina: mostrato solo se l'utente loggato è l'autore oppure è un admin */}
+            {cdData.isLoggedIn && (cdData.isAdmin || r.author?.username === cdData.currentUserUsername) && (
+              <div style={{ marginTop: '10px', textAlign: 'right' }}>
+                <button 
+                  onClick={() => handleDelete(r.id)} 
+                  style={{ backgroundColor: 'transparent', color: 'crimson', border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                >
+                  Elimina
+                </button>
+              </div>
+            )}
           </div>
         ))
       )}

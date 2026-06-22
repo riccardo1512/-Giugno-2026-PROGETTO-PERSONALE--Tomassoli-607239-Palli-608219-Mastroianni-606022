@@ -32,6 +32,23 @@ public class GlobalController {
         return null;
     }
 
+    @ModelAttribute("currentUserUsername")
+    public String getCurrentUserUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                return ((UserDetails) principal).getUsername();
+            } else if (principal instanceof OAuth2User) {
+                OAuth2User oauth2User = (OAuth2User) principal;
+                String email = oauth2User.getAttribute("email");
+                if (email == null) email = oauth2User.getAttribute("login") + "@github.com";
+                return email;
+            }
+        }
+        return null;
+    }
+
     @ModelAttribute("isAdmin")
     public boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

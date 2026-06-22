@@ -46,6 +46,32 @@ public class ReviewController {
         return "reviews/reviews.html";
     }
 
+    private User getAuthenticatedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+            org.springframework.security.oauth2.core.user.OAuth2User oauth2User = (org.springframework.security.oauth2.core.user.OAuth2User) principal;
+            username = oauth2User.getAttribute("email");
+            if (username == null) {
+                username = oauth2User.getAttribute("login") + "@github.com";
+            }
+        }
+        if (username != null) {
+            Credentials credentials = credentialsService.getCredentials(username);
+            if (credentials != null) {
+                return credentials.getUser();
+            }
+        }
+        return null;
+    }
+
+    private boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
+    }
+
     @PostMapping("/cds/{cdId}/reviews")
     public String newReviewStandard(@Valid @ModelAttribute("review") Review review, BindingResult bindingResult, @PathVariable("cdId") Long cdId, Model model) {
         Optional<CD> optional = cdService.findById(cdId);
@@ -55,11 +81,8 @@ public class ReviewController {
         CD cd = optional.get();
         
         if (!bindingResult.hasErrors()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal instanceof UserDetails) {
-                String username = ((UserDetails) principal).getUsername();
-                Credentials credentials = credentialsService.getCredentials(username);
-                User user = credentials.getUser();
+            User user = getAuthenticatedUser();
+            if (user != null) {
                 review.setAuthor(user);
                 review.setCd(cd);
                 reviewService.save(review);
@@ -68,6 +91,20 @@ public class ReviewController {
         }
         model.addAttribute("cd", cd);
         return "reviews/reviews.html";
+    }
+
+    @GetMapping("/cds/{cdId}/reviews/{reviewId}/delete")
+    public String deleteReviewStandard(@PathVariable("cdId") Long cdId, @PathVariable("reviewId") Long reviewId) {
+        Optional<Review> reviewOpt = reviewService.findById(reviewId);
+        if (reviewOpt.isPresent()) {
+            Review review = reviewOpt.get();
+            User currentUser = getAuthenticatedUser();
+            // Permetti l'eliminazione se l'utente è l'autore della recensione OPPURE è un amministratore
+            if (currentUser != null && (review.getAuthor().getId().equals(currentUser.getId()) || isAdmin())) {
+                reviewService.delete(review);
+            }
+        }
+        return "redirect:/cds/" + cdId + "/reviews";
     }
 
     @GetMapping("/cds/{id}/react-reviews")

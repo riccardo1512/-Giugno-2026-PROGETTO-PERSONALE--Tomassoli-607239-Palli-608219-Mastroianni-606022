@@ -72,6 +72,10 @@
                 Di: <span th:text="${r.author.username}">Utente</span>
             </div>
             <p style="margin: 0;" th:text="${r.text}">Testo recensione...</p>
+            
+            <div th:if="${userDetails != null and (isAdmin or r.author.username == currentUserUsername)}" style="margin-top: 10px; text-align: right;">
+                <a th:href="@{'/cds/' + ${cd.id} + '/reviews/' + ${r.id} + '/delete'}" class="btn-danger-link" onclick="return confirm('Sei sicuro di voler eliminare questa recensione?');">Elimina</a>
+            </div>
         </div>
     </div>
 

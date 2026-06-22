@@ -33,6 +33,32 @@ public class ReviewRestController {
         this.credentialsService = credentialsService;
     }
 
+    private User getAuthenticatedUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+            org.springframework.security.oauth2.core.user.OAuth2User oauth2User = (org.springframework.security.oauth2.core.user.OAuth2User) principal;
+            username = oauth2User.getAttribute("email");
+            if (username == null) {
+                username = oauth2User.getAttribute("login") + "@github.com";
+            }
+        }
+        if (username != null) {
+            Credentials credentials = credentialsService.getCredentials(username);
+            if (credentials != null) {
+                return credentials.getUser();
+            }
+        }
+        return null;
+    }
+
+    private boolean isAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
+    }
+
     @PostMapping("/cds/{cdId}/reviews")
     public Review newReviewReact(@Valid @RequestBody Review review, @PathVariable("cdId") Long cdId) {
         Optional<CD> optional = cdService.findById(cdId);
@@ -41,17 +67,27 @@ public class ReviewRestController {
         }
         CD cd = optional.get();
         
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails) principal).getUsername();
-            Credentials credentials = credentialsService.getCredentials(username);
-            User user = credentials.getUser();
-            
+        User user = getAuthenticatedUser();
+        if (user != null) {
             review.setAuthor(user);
             review.setCd(cd);
-            
             return reviewService.save(review);
         }
         throw new RuntimeException("Utente non autenticato");
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/cds/{cdId}/reviews/{reviewId}")
+    public org.springframework.http.ResponseEntity<?> deleteReviewReact(@PathVariable("cdId") Long cdId, @PathVariable("reviewId") Long reviewId) {
+        Optional<Review> reviewOpt = reviewService.findById(reviewId);
+        if (reviewOpt.isPresent()) {
+            Review review = reviewOpt.get();
+            User currentUser = getAuthenticatedUser();
+            if (currentUser != null && (review.getAuthor().getId().equals(currentUser.getId()) || isAdmin())) {
+                reviewService.delete(review);
+                return org.springframework.http.ResponseEntity.ok().build();
+            }
+            return org.springframework.http.ResponseEntity.status(403).body("Non autorizzato");
+        }
+        return org.springframework.http.ResponseEntity.notFound().build();
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import it.uniroma3.siw.negozio.model.Review;
 import it.uniroma3.siw.negozio.repository.ReviewRepository;
 
+import java.util.Optional;
+
 @Service
 public class ReviewService {
 
@@ -21,8 +23,8 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review findById(Long id) {
-        return reviewRepository.findById(id).orElse(null);
+    public Optional<Review> findById(Long id) {
+        return reviewRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
