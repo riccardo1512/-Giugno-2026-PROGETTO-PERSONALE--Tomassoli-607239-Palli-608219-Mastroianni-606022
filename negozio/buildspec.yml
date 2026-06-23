@@ -17,9 +17,7 @@ phases:
     commands:
       - echo "Inizio build di Spring Boot con Maven..."
       - cd negozio
-      - sed -i 's/\r$//' mvnw
-      - chmod +x mvnw
-      - ./mvnw clean package -DskipTests
+      - mvn clean package -DskipTests
       - echo "Backend compilato con successo."
   post_build:
     commands:
