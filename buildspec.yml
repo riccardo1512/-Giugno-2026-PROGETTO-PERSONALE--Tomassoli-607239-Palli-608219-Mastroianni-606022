@@ -4,7 +4,7 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-      nodejs: 18
+      nodejs: 20
   pre_build:
     commands:
       - echo "Inizio build del frontend React..."
