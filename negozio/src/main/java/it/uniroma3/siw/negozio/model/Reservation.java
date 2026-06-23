@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
+import it.uniroma3.siw.negozio.validation.ValidReservationDate;
 
 @Entity
 public class Reservation {
@@ -19,6 +21,8 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
+    @ValidReservationDate
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
