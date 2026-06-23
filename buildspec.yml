@@ -11,7 +11,6 @@ phases:
       - cd negozio/frontend
       - npm install
       - npm run build
-      - cd ..
       - echo "Frontend compilato con successo."
   build:
     commands:
@@ -22,11 +21,11 @@ phases:
   post_build:
     commands:
       - echo "Preparo i file per Elastic Beanstalk..."
-      - cd negozio
-      - mv target/*.jar application.jar
+      # Torniamo alla root (se eravamo ancora in negozio) o assicuriamoci di esserci
+      - cd $CODEBUILD_SRC_DIR
+      - mv negozio/target/*.jar application.jar
 
 artifacts:
-  base-directory: negozio
   files:
     - application.jar
     - Dockerfile
