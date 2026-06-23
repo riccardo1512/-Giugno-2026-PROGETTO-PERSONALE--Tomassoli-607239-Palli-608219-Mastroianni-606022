@@ -8,14 +8,14 @@ phases:
   pre_build:
     commands:
       - echo "Inizio build del frontend React..."
-      - cd negozio/frontend
+      - cd $CODEBUILD_SRC_DIR/negozio/frontend
       - npm install
       - npm run build
       - echo "Frontend compilato con successo."
   build:
     commands:
       - echo "Inizio build di Spring Boot con Maven..."
-      - cd negozio
+      - cd $CODEBUILD_SRC_DIR/negozio
       - mvn clean package -DskipTests
       - echo "Backend compilato con successo."
   post_build:
