@@ -16,6 +16,7 @@ phases:
   build:
     commands:
       - echo "Inizio build di Spring Boot con Maven..."
+      - cd negozio
       - sed -i 's/\r$//' mvnw
       - chmod +x mvnw
       - ./mvnw clean package -DskipTests
@@ -23,6 +24,7 @@ phases:
   post_build:
     commands:
       - echo "Preparo i file per Elastic Beanstalk..."
+      - cd negozio
       - mv target/*.jar application.jar
 
 artifacts:
