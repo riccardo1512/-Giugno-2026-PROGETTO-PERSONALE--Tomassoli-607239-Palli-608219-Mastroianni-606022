@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+      nodejs: 18
+  pre_build:
+    commands:
+      - echo "Inizio build del frontend React..."
+      - cd negozio/frontend
+      - npm install
+      - npm run build
+      - cd ..
+      - echo "Frontend compilato con successo."
+  build:
+    commands:
+      - echo "Inizio build di Spring Boot con Maven..."
+      - sed -i 's/\r$//' mvnw
+      - chmod +x mvnw
+      - ./mvnw clean package -DskipTests
+      - echo "Backend compilato con successo."
+  post_build:
+    commands:
+      - echo "Preparo i file per Elastic Beanstalk..."
+      - mv target/*.jar application.jar
+
+artifacts:
+  base-directory: negozio
+  files:
+    - application.jar
+    - Dockerfile
