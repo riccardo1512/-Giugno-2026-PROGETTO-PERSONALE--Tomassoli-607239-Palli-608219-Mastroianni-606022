@@ -32,12 +32,14 @@ public class CartController {
     private ReservationItemService reservationItemService;
     private CredentialsService credentialsService;
     private CDService cdService;
+    private it.uniroma3.siw.negozio.validation.ReservationValidator reservationValidator;
 
-    public CartController(ReservationService reservationService, ReservationItemService reservationItemService, CredentialsService credentialsService, CDService cdService) {
+    public CartController(ReservationService reservationService, ReservationItemService reservationItemService, CredentialsService credentialsService, CDService cdService, it.uniroma3.siw.negozio.validation.ReservationValidator reservationValidator) {
         this.reservationService = reservationService;
         this.reservationItemService = reservationItemService;
         this.credentialsService = credentialsService;
         this.cdService = cdService;
+        this.reservationValidator = reservationValidator;
     }
 
     private User getCurrentUser() {
@@ -163,32 +165,22 @@ public class CartController {
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout() {
+    public String checkout(Model model) {
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             return "redirect:/login";
         }
         
         Reservation cart = reservationService.getCart(currentUser);
-        if (cart.getItems() != null && !cart.getItems().isEmpty()) {
-            // First check if all items are in stock
-            for (ReservationItem item : cart.getItems()) {
-                CD cd = item.getCd();
-                if (cd != null && cd.getAvailableQuantity() < item.getQuantity()) {
-                    return "redirect:/cart?error=stock_exceeded";
-                }
-            }
-            // Deduct stock
-            for (ReservationItem item : cart.getItems()) {
-                CD cd = item.getCd();
-                if (cd != null) {
-                    cd.setAvailableQuantity(cd.getAvailableQuantity() - item.getQuantity());
-                    cdService.save(cd);
-                }
-            }
-            cart.setState(ReservationState.PENDING);
-            cart.setDate(java.time.LocalDate.now());
-            reservationService.save(cart);
+        org.springframework.validation.BeanPropertyBindingResult errors = new org.springframework.validation.BeanPropertyBindingResult(cart, "cart");
+        reservationValidator.validate(cart, errors);
+        if (errors.hasErrors()) {
+            return "redirect:/cart?error=empty_cart";
+        }
+        
+        boolean success = reservationService.checkoutCart(cart);
+        if (!success) {
+            return "redirect:/cart?error=stock_exceeded";
         }
         return "redirect:/reservations";
     }

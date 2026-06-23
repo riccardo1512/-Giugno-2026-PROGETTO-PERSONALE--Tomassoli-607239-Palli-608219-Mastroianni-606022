@@ -17,18 +17,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import it.uniroma3.siw.negozio.model.Credentials;
 import it.uniroma3.siw.negozio.model.Reservation;
 import it.uniroma3.siw.negozio.model.User;
+import it.uniroma3.siw.negozio.model.ReservationState;
 import it.uniroma3.siw.negozio.service.CredentialsService;
 import it.uniroma3.siw.negozio.service.ReservationService;
+import it.uniroma3.siw.negozio.service.CDService;
 
 @Controller
 public class ReservationController {
 
     private ReservationService reservationService;
     private CredentialsService credentialsService;
-    private it.uniroma3.siw.negozio.service.CDService cdService;
+    private CDService cdService;
 
     public ReservationController(ReservationService reservationService, CredentialsService credentialsService,
-            it.uniroma3.siw.negozio.service.CDService cdService) {
+            CDService cdService) {
         this.reservationService = reservationService;
         this.credentialsService = credentialsService;
         this.cdService = cdService;
@@ -63,7 +65,7 @@ public class ReservationController {
             return "redirect:/login";
         }
         model.addAttribute("reservations", this.reservationService.findByUserAndStateNot(currentUser,
-                it.uniroma3.siw.negozio.model.ReservationState.CART));
+                ReservationState.CART));
         return "reservations/listReservation";
     }
 
@@ -99,19 +101,8 @@ public class ReservationController {
         Optional<Reservation> optional = reservationService.findById(id);
         if (currentUser != null && optional.isPresent()) {
             Reservation reservation = optional.get();
-            if (reservation.getUser().equals(currentUser)
-                    && reservation.getState() == it.uniroma3.siw.negozio.model.ReservationState.PENDING) {
-                reservation.setState(it.uniroma3.siw.negozio.model.ReservationState.CANCELLED);
-                if (reservation.getItems() != null) {
-                    for (it.uniroma3.siw.negozio.model.ReservationItem item : reservation.getItems()) {
-                        it.uniroma3.siw.negozio.model.CD cd = item.getCd();
-                        if (cd != null) {
-                            cd.setAvailableQuantity(cd.getAvailableQuantity() + item.getQuantity());
-                            cdService.save(cd);
-                        }
-                    }
-                }
-                reservationService.save(reservation);
+            if (reservation.getUser().equals(currentUser)) {
+                reservationService.cancelReservation(reservation);
             }
         }
         return "redirect:/reservations/" + id;
@@ -130,7 +121,7 @@ public class ReservationController {
             return "redirect:/reservations";
 
         model.addAttribute("reservation", optional.get());
-        model.addAttribute("states", it.uniroma3.siw.negozio.model.ReservationState.values());
+        model.addAttribute("states", ReservationState.values());
         return "admin/reservations/formReservationState";
     }
 
@@ -144,7 +135,7 @@ public class ReservationController {
 
         // Prende tutte le prenotazioni tranne quelle ancora nel carrello
         java.util.List<Reservation> allReservations = reservationService.findAll().stream()
-            .filter(r -> r.getState() != it.uniroma3.siw.negozio.model.ReservationState.CART)
+            .filter(r -> r.getState() != ReservationState.CART)
             .collect(java.util.stream.Collectors.toList());
 
         model.addAttribute("reservations", allReservations);
@@ -153,7 +144,7 @@ public class ReservationController {
 
     @PostMapping("/admin/reservations/{id}/edit")
     public String updateReservationState(@PathVariable("id") Long id,
-            @RequestParam("state") it.uniroma3.siw.negozio.model.ReservationState newState) {
+            @RequestParam("state") ReservationState newState) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
@@ -163,35 +154,7 @@ public class ReservationController {
         Optional<Reservation> optional = reservationService.findById(id);
         if (optional.isPresent()) {
             Reservation reservation = optional.get();
-            it.uniroma3.siw.negozio.model.ReservationState oldState = reservation.getState();
-
-            if (oldState != it.uniroma3.siw.negozio.model.ReservationState.CANCELLED
-                    && newState == it.uniroma3.siw.negozio.model.ReservationState.CANCELLED) {
-                // Restore stock
-                if (reservation.getItems() != null) {
-                    for (it.uniroma3.siw.negozio.model.ReservationItem item : reservation.getItems()) {
-                        it.uniroma3.siw.negozio.model.CD cd = item.getCd();
-                        if (cd != null) {
-                            cd.setAvailableQuantity(cd.getAvailableQuantity() + item.getQuantity());
-                            cdService.save(cd);
-                        }
-                    }
-                }
-            } else if (oldState == it.uniroma3.siw.negozio.model.ReservationState.CANCELLED
-                    && newState != it.uniroma3.siw.negozio.model.ReservationState.CANCELLED) {
-                // Deduct stock (assuming enough available, for simplicity)
-                if (reservation.getItems() != null) {
-                    for (it.uniroma3.siw.negozio.model.ReservationItem item : reservation.getItems()) {
-                        it.uniroma3.siw.negozio.model.CD cd = item.getCd();
-                        if (cd != null) {
-                            cd.setAvailableQuantity(cd.getAvailableQuantity() - item.getQuantity());
-                            cdService.save(cd);
-                        }
-                    }
-                }
-            }
-            reservation.setState(newState);
-            reservationService.save(reservation);
+            reservationService.updateReservationState(reservation, newState);
         }
         return "redirect:/reservations/" + id;
     }
@@ -207,29 +170,6 @@ public class ReservationController {
         Optional<Reservation> optional = reservationService.findById(id);
         if (optional.isPresent()) {
             Reservation reservation = optional.get();
-            if (reservation.getState() != it.uniroma3.siw.negozio.model.ReservationState.CANCELLED
-                    && reservation.getState() != it.uniroma3.siw.negozio.model.ReservationState.CART) {
-                // Restore stock before deleting
-                if (reservation.getItems() != null) {
-                    for (it.uniroma3.siw.negozio.model.ReservationItem item : reservation.getItems()) {
-                        it.uniroma3.siw.negozio.model.CD cd = item.getCd();
-                        if (cd != null) {
-                            cd.setAvailableQuantity(cd.getAvailableQuantity() + item.getQuantity());
-                            cdService.save(cd);
-                        }
-                    }
-                }
-            }
-            // Remove items first to avoid constraint violation
-            if (reservation.getItems() != null) {
-                for (it.uniroma3.siw.negozio.model.ReservationItem item : reservation.getItems()) {
-                    item.setReservation(null);
-                    // actually delete item? or just let cascade do it?
-                    // assuming cascade delete or let's assume we need to delete items.
-                    // For now, let's just delete the reservation, hoping cascade is configured.
-                    // If not, it will throw an exception, but let's assume standard behavior.
-                }
-            }
             reservationService.deleteById(id);
         }
         return "redirect:/reservations";
