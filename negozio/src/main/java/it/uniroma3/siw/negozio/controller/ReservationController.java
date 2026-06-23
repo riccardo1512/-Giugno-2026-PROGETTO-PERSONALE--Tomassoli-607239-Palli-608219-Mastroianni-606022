@@ -172,6 +172,6 @@ public class ReservationController {
             Reservation reservation = optional.get();
             reservationService.deleteById(id);
         }
-        return "redirect:/reservations";
+        return "redirect:/admin/reservations";
     }
 }

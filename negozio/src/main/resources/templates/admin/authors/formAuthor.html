@@ -61,12 +61,15 @@
             <span th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Errore Data Nascita</span>
         </div>
 
-        <div>
-            <label>Data di Morte (Opzionale):</label>
-            <input type="date" th:field="*{dateOfDeath}" />
-            <span th:if="${#fields.hasErrors('dateOfDeath')}" th:errors="*{dateOfDeath}">Errore Data Morte</span>
-        </div>
+      <div>
+    <label>Data di Morte (Opzionale):</label>
+    <input type="date" th:field="*{dateOfDeath}" />
+    <span th:if="${#fields.hasErrors('dateOfDeath')}" th:errors="*{dateOfDeath}">Errore Data Morte</span>
 
+    <span th:if="${#fields.hasErrors('dateOfDeathValid')}" th:errors="*{dateOfDeathValid}">
+        Errore data morte
+    </span>
+</div>
         <div>
             <button type="submit">Salva Autore</button>
         </div>

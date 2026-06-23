@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -35,6 +36,14 @@ public class Author {
     
     @Past
     private LocalDate dateOfDeath;
+
+    @AssertTrue(message = "La data di morte deve essere successiva alla data di nascita")
+public boolean isDateOfDeathValid() {
+    if (this.dateOfDeath == null || this.dateOfBirth == null) {
+        return true;
+    }
+    return this.dateOfDeath.isAfter(this.dateOfBirth);
+}
 
     @JsonIgnore
     @OneToMany(mappedBy = "author")

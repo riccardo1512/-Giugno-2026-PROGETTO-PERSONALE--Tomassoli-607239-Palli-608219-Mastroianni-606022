@@ -55,9 +55,6 @@
             <a th:href="@{'/admin/authors/' + ${author.id} + '/edit'}" class="btn-action">Modifica Autore</a>
             
             <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap;">
-                <form th:action="@{'/admin/authors/' + ${author.id} + '/delete'}" method="POST" style="background:none; border:none; box-shadow:none; padding:0; margin:0;">
-                    <button type="submit" class="btn-danger" onclick="return confirm('Sei sicuro di voler eliminare l\'autore? Se ha ancora CD associati, l\'operazione fallirà.')">Elimina Solo Autore</button>
-                </form>
 
                 <form th:action="@{'/admin/authors/' + ${author.id} + '/deleteWithCDs'}" method="POST" style="background:none; border:none; box-shadow:none; padding:0; margin:0;">
                     <button type="submit" class="btn-danger" onclick="return confirm('ATTENZIONE: Sei sicuro di voler eliminare questo autore E TUTTI I SUOI CD dal negozio in modo irreversibile?')">Elimina Autore + Suoi CD</button>

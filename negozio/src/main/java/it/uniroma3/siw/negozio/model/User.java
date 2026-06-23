@@ -26,8 +26,8 @@ public class User {
     private String username;
 
     @JsonIgnore
-    @OneToMany
-    private List<Reservation> reservations;
+    @OneToMany(mappedBy = "user")
+private List<Reservation> reservations;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author")

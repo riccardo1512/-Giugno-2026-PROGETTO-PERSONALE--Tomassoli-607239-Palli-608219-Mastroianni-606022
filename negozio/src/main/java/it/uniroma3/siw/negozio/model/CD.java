@@ -36,7 +36,7 @@ public class CD {
     private int availableQuantity;
 
     @NotFutureYear
-    @Min(0)
+    @Min(1800)
     private int yearOfRelease;
 
     @NotNull

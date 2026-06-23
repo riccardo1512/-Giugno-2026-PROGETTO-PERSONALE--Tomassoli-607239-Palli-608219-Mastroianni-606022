@@ -14,6 +14,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import it.uniroma3.siw.negozio.validation.ValidReservationDate;
 
+import jakarta.persistence.CascadeType;
+
 @Entity
 public class Reservation {
 
@@ -31,8 +33,8 @@ public class Reservation {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "reservation")
-    private List<ReservationItem> items;
+   @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE, orphanRemoval = true)
+private List<ReservationItem> items;
 
     public Long getId() {
         return id;
