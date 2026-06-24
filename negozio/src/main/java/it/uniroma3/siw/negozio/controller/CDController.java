@@ -30,13 +30,13 @@ public class CDController {
 
     @GetMapping("/cds")
     public String getCDs(Model model) {
-        model.addAttribute("cds", this.cdService.findAll());
+        model.addAttribute("cds", this.cdService.findAllWithAuthor());
         return "cds/listCD";
     }
 
     @GetMapping("/cds/{id}")
     public String show(@PathVariable("id") Long id, Model model) {
-        Optional<CD> optional = cdService.findById(id);
+        Optional<CD> optional = cdService.findByIdWithReviews(id);
         if (optional.isEmpty()) {
             return "redirect:/cds";
         }

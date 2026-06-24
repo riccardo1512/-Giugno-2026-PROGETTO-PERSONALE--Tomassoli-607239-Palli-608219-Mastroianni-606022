@@ -26,8 +26,18 @@ public class CDService {
     }
 
     @Transactional(readOnly = true)
+    public List<CD> findAllWithAuthor() {
+        return cdRepository.findAllWithAuthor();
+    }
+
+    @Transactional(readOnly = true)
     public Optional<CD> findById(Long id) {
         return cdRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CD> findByIdWithReviews(Long id) {
+        return cdRepository.findByIdWithReviews(id);
     }
 
     @Transactional
