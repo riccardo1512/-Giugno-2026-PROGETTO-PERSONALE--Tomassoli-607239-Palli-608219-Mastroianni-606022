@@ -44,7 +44,6 @@ public class CD {
     private Genre genre;
 
     private String recordLabel;
-    private List<String> songs;
 
     @NotNull
     @ManyToOne
@@ -120,14 +119,6 @@ public class CD {
 
     public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public List<String> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(List<String> songs) {
-        this.songs = songs;
     }
 
     public List<Review> getReviews() {
