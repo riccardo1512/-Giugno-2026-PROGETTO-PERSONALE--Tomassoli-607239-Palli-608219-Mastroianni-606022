@@ -13,19 +13,24 @@ import org.springframework.validation.BindingResult;
 
 import it.uniroma3.siw.negozio.model.CD;
 import it.uniroma3.siw.negozio.model.Genre;
+import it.uniroma3.siw.negozio.service.AuthorService;
 import it.uniroma3.siw.negozio.service.CDService;
+import it.uniroma3.siw.negozio.service.ReviewService;
+import it.uniroma3.siw.negozio.validation.CDValidator;
 
 @Controller
 public class CDController {
 
     private final CDService cdService;
-    private final it.uniroma3.siw.negozio.service.AuthorService authorService;
-    private final it.uniroma3.siw.negozio.validation.CDValidator cdValidator;
+    private final AuthorService authorService;
+    private final CDValidator cdValidator;
+    private final ReviewService reviewService;
 
-    public CDController(CDService cdService, it.uniroma3.siw.negozio.service.AuthorService authorService, it.uniroma3.siw.negozio.validation.CDValidator cdValidator) {
+    public CDController(CDService cdService, AuthorService authorService, CDValidator cdValidator, ReviewService reviewService) {
         this.cdService = cdService;
         this.authorService = authorService;
         this.cdValidator = cdValidator;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/cds")
@@ -40,7 +45,9 @@ public class CDController {
         if (optional.isEmpty()) {
             return "redirect:/cds";
         }
-        model.addAttribute("cd", optional.get());
+        CD cd = optional.get();
+        model.addAttribute("cd", cd);
+        model.addAttribute("averageRating", reviewService.getAverageRating(cd));
         return "cds/showCD";
     }
 
@@ -48,7 +55,7 @@ public class CDController {
     public String createForm(Model model) {
         model.addAttribute("cd", new CD());
         model.addAttribute("authors", authorService.findAll());
-        model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
+        model.addAttribute("genres", Genre.values());
         return "admin/cds/formCD";
     }
 
@@ -58,7 +65,7 @@ public class CDController {
         cdValidator.validate(cd, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("authors", authorService.findAll());
-            model.addAttribute("genres", it.uniroma3.siw.negozio.model.Genre.values());
+            model.addAttribute("genres", Genre.values());
             return "admin/cds/formCD";
         }
         cdService.save(cd);

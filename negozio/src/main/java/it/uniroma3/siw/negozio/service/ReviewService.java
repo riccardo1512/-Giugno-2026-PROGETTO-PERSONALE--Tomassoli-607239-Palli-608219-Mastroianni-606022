@@ -7,6 +7,7 @@ import it.uniroma3.siw.negozio.model.Review;
 import it.uniroma3.siw.negozio.repository.ReviewRepository;
 
 import java.util.Optional;
+import it.uniroma3.siw.negozio.model.CD;
 
 @Service
 public class ReviewService {
@@ -30,6 +31,12 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Iterable<Review> findAll() {
         return reviewRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public double getAverageRating(CD cd) {
+        Double avg = reviewRepository.getAverageRatingForCD(cd);
+        return avg != null ? avg : 0.0;
     }
 
     @Transactional
