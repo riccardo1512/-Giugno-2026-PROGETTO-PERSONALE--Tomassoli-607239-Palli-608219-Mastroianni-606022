@@ -61,9 +61,6 @@ public class ReservationController {
     @GetMapping("/reservations")
     public String getReservations(Model model) {
         User currentUser = getCurrentUser();
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
         model.addAttribute("reservations", this.reservationService.findByUserAndStateNot(currentUser,
                 ReservationState.CART));
         return "reservations/listReservation";
@@ -86,7 +83,7 @@ public class ReservationController {
                     .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
         }
 
-        if (currentUser == null || (!reservation.getUser().equals(currentUser) && !isAdmin)) {
+        if (!reservation.getUser().equals(currentUser) && !isAdmin) {
             return "redirect:/reservations";
         }
 
@@ -99,7 +96,7 @@ public class ReservationController {
     public String cancelReservation(@PathVariable("id") Long id) {
         User currentUser = getCurrentUser();
         Optional<Reservation> optional = reservationService.findById(id);
-        if (currentUser != null && optional.isPresent()) {
+        if (optional.isPresent()) {
             Reservation reservation = optional.get();
             if (reservation.getUser().equals(currentUser)) {
                 reservationService.cancelReservation(reservation);
@@ -110,12 +107,6 @@ public class ReservationController {
 
     @GetMapping("/admin/reservations/{id}/edit")
     public String editReservationState(@PathVariable("id") Long id, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
-        if (!isAdmin)
-            return "redirect:/";
-
         Optional<Reservation> optional = reservationService.findById(id);
         if (optional.isEmpty())
             return "redirect:/reservations";
@@ -127,12 +118,6 @@ public class ReservationController {
 
     @GetMapping("/admin/reservations")
     public String manageReservations(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
-        if (!isAdmin)
-            return "redirect:/";
-
         // Prende tutte le prenotazioni tranne quelle ancora nel carrello
         java.util.List<Reservation> allReservations = reservationService.findAll().stream()
             .filter(r -> r.getState() != ReservationState.CART)
@@ -145,12 +130,6 @@ public class ReservationController {
     @PostMapping("/admin/reservations/{id}/edit")
     public String updateReservationState(@PathVariable("id") Long id,
             @RequestParam("state") ReservationState newState) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
-        if (!isAdmin)
-            return "redirect:/";
-
         Optional<Reservation> optional = reservationService.findById(id);
         if (optional.isPresent()) {
             Reservation reservation = optional.get();
@@ -161,12 +140,6 @@ public class ReservationController {
 
     @PostMapping("/admin/reservations/{id}/delete")
     public String deleteReservation(@PathVariable("id") Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals(Credentials.ADMIN_ROLE));
-        if (!isAdmin)
-            return "redirect:/";
-
         Optional<Reservation> optional = reservationService.findById(id);
         if (optional.isPresent()) {
             Reservation reservation = optional.get();

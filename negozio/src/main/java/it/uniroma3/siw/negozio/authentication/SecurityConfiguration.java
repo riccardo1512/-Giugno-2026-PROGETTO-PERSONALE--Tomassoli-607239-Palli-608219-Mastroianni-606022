@@ -45,8 +45,7 @@ public class SecurityConfiguration {
 
         httpSecurity.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/cds", "/cds/**",
-                    "/authors", "/authors/**", "/reservations", "/reservations/**", "/reservationItems",
-                    "/reservationItems/**",
+                    "/authors", "/authors/**", 
                     "/css/**", "/images/**", "/js/**", "/favicon.ico").permitAll();
             authorize.requestMatchers(HttpMethod.POST, "/register", "/login").permitAll();
             authorize.requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority(ADMIN_ROLE);
